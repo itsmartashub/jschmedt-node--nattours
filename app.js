@@ -4,14 +4,30 @@ const express = require('express')
 const app = express()
 app.use(express.json()) // middleware je u sustini f-ja koja moze da modifikuje podatke koji nam stizu na server, dakle stoji in the middle of the req i res. Ako ovo zakomentarisemo body je undefined, odn nemamo ga vise
 
-// podatke ne citamo u app.get u CB, znamo a to opterecuje thread, nema potrebe,
+/* *****************************************
+ ******** MIDDLEWARE
+ ******************************************** */
+app.use((req, res, next) => {
+	// sva ova tri parametra mozemo zapravo ovde nazvati kako hocemo, ali drzimo se konvencija. Ovaj middleware se odnosi na svaku route
+	console.log('Hello from the middleware 👋')
+	next()
+})
+app.use((req, res, next) => {
+	req.requestTime = new Date().toISOString()
+	next() // ne smemo zaboraviti da pozovemo ovu f-ju
+})
+
+// podatke ne citamo u app.get u callback fji (EventLoop-u), znamo da to opterecuje thread, nema potrebe
 const tours = JSON.parse(
 	fs.readFileSync(`${__dirname}/dev-data/data/tours-simple.json`, 'utf-8')
 )
 
 const getAllTours = (req, res) => {
+	console.log(req.requestTime)
+
 	res.status(200).json({
 		status: 'success',
+		requestedAt: req.requestTime,
 		data: { result: tours.length, tours },
 	})
 }
@@ -87,9 +103,9 @@ const deleteTour = (req, res) => {
 		data: null,
 	})
 }
-///////////////////////////////////////////
-/// OVO JE NACIN 1
-///////////////////////////////////////////
+/* *****************************************
+ ******** OVO JE NACIN 1
+ ******************************************** */
 // app.get('/api/v1/tours', getAllTours)
 
 // /*
@@ -116,10 +132,24 @@ const deleteTour = (req, res) => {
 
 // app.delete('/api/v1/tours/:id', deleteTour)
 
-///////////////////////////////////////////
-/// OVO JE NACIN 2 sa app route koji omogucava chainovanje http method-a koji imaju isti http path
-///////////////////////////////////////////
+/* *************************************************************
+ ******** OVO JE NACIN 2 sa app route koji omogucava chain-ovanje http method-a koji imaju isti http path
+ ************************************************************* */
 app.route('/api/v1/tours').get(getAllTours).post(createTour)
+
+/* 
+Redosled je jako bian u expressu. Ako smo ovaj ovde middleware stavili tu, on se nece okinuti na ovaj iznad get req jer u getAllTours() cb f-ji json() deo oznacava kraj rikvesta, i uopste se ovaj app.use() middleware ne okine.
+
+Dok prilikom ovih ispod get/patch/delete ka /api/v1/tours/:id   path se ofc okine middleware jer je pre tog.
+
+Inace, mozemo dodati koliko hocemo middlerware f-ja
+
+app.use((req, res, next) => {
+	console.log('Hello from the middleware 👋')
+	next()
+})
+*/
+
 app.route('/api/v1/tours/:id').get(getTour).patch(updateTour).delete(deleteTour)
 
 const port = 3000
