@@ -1,9 +1,16 @@
 [
   {
     "_id": "90e82cf4-8465-431e-a50f-0672adbc7b38",
-    "colName": "Nattours",
+    "colName": "Nattours - Tours",
     "created": "2023-06-20T13:51:51.420Z",
     "sortNum": 10000,
+    "folders": []
+  },
+  {
+    "_id": "89bd6b57-628d-498b-8607-4dbb15073b48",
+    "colName": "Nattours - Users",
+    "created": "2023-06-20T20:21:37.441Z",
+    "sortNum": 20000,
     "folders": []
   }
 ]
