@@ -101,6 +101,4 @@ userRouter.route('/:id').get(getUser).patch(updateUser).delete(deleteUser) */
 app.use('/api/v1/tours', tourRouter)
 app.use('/api/v1/users', userRouter)
 
-////////////////// 4) START THE SERVER //////////////////
-const port = 3000
-app.listen(port, () => console.log(`Listening on port ${port}`))
+module.exports = app
