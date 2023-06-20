@@ -1,0 +1,82 @@
+[
+  {
+    "_id": "b8fa3a3d-61d8-42bd-b826-7de343e861f9",
+    "colId": "history",
+    "containerId": "",
+    "name": "Get Tours Data",
+    "url": "127.0.0.1:3000/api/v1/tours",
+    "method": "GET",
+    "sortNum": 0,
+    "created": "2023-06-20T13:29:34.196Z",
+    "modified": "2023-06-20T13:36:54.623Z",
+    "headers": [],
+    "params": [],
+    "tests": []
+  },
+  {
+    "_id": "7f00acf4-e708-47d9-9e88-b9356cfd0566",
+    "colId": "history",
+    "containerId": "",
+    "name": "Get Tour By ID",
+    "url": "127.0.0.1:3000/api/v1/tours/23",
+    "method": "GET",
+    "sortNum": 0,
+    "created": "2023-06-20T13:29:34.196Z",
+    "modified": "2023-06-20T14:21:17.271Z",
+    "headers": [],
+    "params": [],
+    "tests": []
+  },
+  {
+    "_id": "abfef0dc-72c6-4709-8b38-e79337fbcd0c",
+    "colId": "history",
+    "containerId": "",
+    "name": "Create Tours",
+    "url": "127.0.0.1:3000/api/v1/tours",
+    "method": "POST",
+    "sortNum": 0,
+    "created": "2023-06-20T13:43:39.050Z",
+    "modified": "2023-06-20T14:04:44.870Z",
+    "headers": [],
+    "params": [],
+    "body": {
+      "type": "json",
+      "raw": "{\n  \"name\": \"Test Tours sa id\",\n  \"difficulty\": \"mid\",\n  \"duration\": 3\n}",
+      "form": []
+    },
+    "tests": []
+  },
+  {
+    "_id": "f844d719-1328-4859-9110-0e88489e4714",
+    "colId": "history",
+    "containerId": "",
+    "name": "Update Tour By ID",
+    "url": "127.0.0.1:3000/api/v1/tours/5",
+    "method": "PATCH",
+    "sortNum": 0,
+    "created": "2023-06-20T14:31:29.643Z",
+    "modified": "2023-06-20T14:39:05.196Z",
+    "headers": [],
+    "params": [],
+    "body": {
+      "type": "json",
+      "raw": "{\n  \"difficulty\": \"patch\"\n}",
+      "form": []
+    },
+    "tests": []
+  },
+  {
+    "_id": "07ea14f1-5d74-46ee-ab7f-4e223c06a47d",
+    "colId": "history",
+    "containerId": "",
+    "name": "Delete Tour by ID",
+    "url": "127.0.0.1:3000/api/v1/tours/10",
+    "method": "DELETE",
+    "sortNum": 0,
+    "created": "2023-06-20T14:42:39.687Z",
+    "modified": "2023-06-20T14:42:39.687Z",
+    "headers": [],
+    "params": [],
+    "tests": []
+  }
+]
