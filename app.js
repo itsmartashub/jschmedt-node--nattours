@@ -1,12 +1,17 @@
 const fs = require('fs')
 const express = require('express')
+const morgan = require('morgan') // 3rdParty middleware
 
 const app = express()
-app.use(express.json()) // middleware je u sustini f-ja koja moze da modifikuje podatke koji nam stizu na server, dakle stoji in the middle of the req i res. Ako ovo zakomentarisemo body je undefined, odn nemamo ga vise
 
 /* *****************************************
- ******** MIDDLEWARE
+ ******** 1) MIDDLEWARES
  ******************************************** */
+app.use(morgan('dev')) // GET /api/v1/tours 200 8.129 ms - 8656
+// app.use(morgan('tiny')) // GET /api/v1/tours 200 8656 - 7.153 ms (ovo 200 nije obojeno i drugi redosled)
+
+app.use(express.json()) // middleware je u sustini f-ja koja moze da modifikuje podatke koji nam stizu na server, dakle stoji in the middle of the req i res. Ako ovo zakomentarisemo body je undefined, odn nemamo ga vise
+
 app.use((req, res, next) => {
 	// sva ova tri parametra mozemo zapravo ovde nazvati kako hocemo, ali drzimo se konvencija. Ovaj middleware se odnosi na svaku route
 	console.log('Hello from the middleware 👋')
@@ -104,36 +109,40 @@ const deleteTour = (req, res) => {
 	})
 }
 /* *****************************************
- ******** OVO JE NACIN 1
+ ******** 2) ROUTE HANDLES
+ OVO JE NACIN 1
  ******************************************** */
-// app.get('/api/v1/tours', getAllTours)
+/* 
+app.get('/api/v1/tours', getAllTours)
 
-// /*
+
 // ovo :id moze biti sta god, :var, :x, :p, :c, sta god :D
 
 // takodje moze biti i chain tih promenljivih tipa:
 //     /api/v1/tours/:id/:name/:level/:c
-
+//
 // Vazno, ukoliko client salje req na ovaj path:
 //     /api/v1/tours/:id/:name/:level/:c
 // on mora isto toliko params da stavi, znaci ne moze:
 //     /api/v1/tours/2/nikola
 // bude error 404
-
+// 
 // Ali mozemo za taj parametar da stavimo da je optional, samo dodamo ?
-//     /api/v1/tours/:id/:name/:level?/:c?      */
+//     /api/v1/tours/:id/:name/:level?/:c?      
 // app.get('/api/v1/tours/:id', getTour)
 
-// // da bismo dohvatili body podatke u express-u moramo koristiti middleware, to je ono kad napisemo app.use(express.json())
-// app.post('/api/v1/tours', createTour)
+// da bismo dohvatili body podatke u express-u moramo koristiti middleware, to je ono kad napisemo app.use(express.json())
+app.post('/api/v1/tours', createTour)
 
-// // Imamo dva HTTPS methoda kojima apdejtujemo podatke: sa PUT ocekujemo da se menja citav objekat, a sa PATCH ocekujemo da se promena vrsi samo nad property-em u tom objektu
-// app.patch('/api/v1/tours/:id', updateTour)
+// Imamo dva HTTPS methoda kojima apdejtujemo podatke: sa PUT ocekujemo da se menja citav objekat, a sa PATCH ocekujemo da se promena vrsi samo nad property-em u tom objektu
+app.patch('/api/v1/tours/:id', updateTour)
 
-// app.delete('/api/v1/tours/:id', deleteTour)
+app.delete('/api/v1/tours/:id', deleteTour)
+*/
 
 /* *************************************************************
- ******** OVO JE NACIN 2 sa app route koji omogucava chain-ovanje http method-a koji imaju isti http path
+ ******** 3) ROUTES
+ 	OVO JE NACIN 2 sa app route koji omogucava chain-ovanje http method-a koji imaju isti http path
  ************************************************************* */
 app.route('/api/v1/tours').get(getAllTours).post(createTour)
 
@@ -152,5 +161,8 @@ app.use((req, res, next) => {
 
 app.route('/api/v1/tours/:id').get(getTour).patch(updateTour).delete(deleteTour)
 
+/* *****************************************
+ ******** 4) START THE SERVER
+ ******************************************** */
 const port = 3000
 app.listen(port, () => console.log(`Listening on port ${port}`))
