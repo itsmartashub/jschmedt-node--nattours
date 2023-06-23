@@ -9,12 +9,14 @@ const app = express()
 /* ///////////////////////////////////////////
 	1) MIDDLEWARES
 /////////////////////////////////////////// */
-app.use(morgan('dev')) // GET /api/v1/tours 200 8.129 ms - 8656
-// app.use(morgan('tiny')) // GET /api/v1/tours 200 8656 - 7.153 ms (ovo 200 nije obojeno i drugi redosled)
+if (process.env.NODE_ENV === 'development') {
+	app.use(morgan('dev')) // GET /api/v1/tours 200 8.129 ms - 8656
+	// app.use(morgan('tiny')) // GET /api/v1/tours 200 8656 - 7.153 ms (ovo 200 nije obojeno i drugi redosled)
+}
 
 app.use(express.json()) // middleware je u sustini f-ja koja moze da modifikuje podatke koji nam stizu na server, dakle stoji in the middle of the req i res. Ako ovo zakomentarisemo body je undefined, odn nemamo ga vise
 
-app.use(express.static(`${__dirname}/public`)) // kada idemo na http://localhost:3000/overview.html recimo, ostvorice se taj html file, dakle ne http://localhost:3000/public/overview.html vec bez public, jer public je jednako root folder.
+app.use(express.static(`${__dirname}/public`)) // kada idemo na http://localhost:3000/overview.html recimo, otvorice se taj html file, dakle ne http://localhost:3000/public/overview.html vec bez public, jer public je jednako root folder.
 // takodje, kada ukucamo recimo u browseru u url http://localhost:3000/img/pin.png i otvorice se ta slika, ali NE MOZEMO http://localhost:3000/img/ jer to nije file, to izgleda kao regularna route, a express dakle pokusava da nadje route handler za /img/ sto ne moze jer nismo nista definisali. Dakle ovo radi samo za STATIC FILES
 
 app.use((req, res, next) => {
