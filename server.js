@@ -31,5 +31,9 @@ app.listen(port, () => console.log(`Listening on port ${port}`))
 u package.js promenjeno:
 
     "start:dev": "nodemon server.js",
-    "start:prod": "NODE_ENV=production nodemon server.js"
-*/
+    "start:prod": "NODE_ENV=production nodemon server.js" */
+
+/* 
+Konfigurisanje slinta sa prettier-om. Moramo instalirati ove extensions u vsc i takodje u terminalu za ovaj project instalirati:
+
+    npm i eslint prettier eslint-config-prettier eslint-plugin-prettier eslint-config-airbnb eslint-plugin-node eslint-plugin-import eslint-plugin-jsx-a11y eslint-plugin-react --save-dev */
