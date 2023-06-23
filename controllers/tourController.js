@@ -23,6 +23,21 @@ exports.checkID = (req, res, next, val) => {
 
 	next() // NE ZABORAVI - da nismo pozvali ovo next() request response cycle bi zaglavio ovde u ovoj mw f-ji i nece moci da nastavi ka drugom mw-u u stacku
 }
+
+/*
+Create a checkBody mw - check if the body contains the name and price property, if not return 400 (bad request from he client) status code. Add it to the post handler stack */
+exports.checkBody = (req, res, next) => {
+	console.log(req.body)
+
+	if (!req.body.name || !req.body.price) {
+		return res.status(400).json({
+			status: 'fail',
+			message: 'Please add a name or the price',
+		})
+	}
+	next() // a sledeci mw je createTour
+}
+
 exports.getAllTours = (req, res) => {
 	console.log(req.requestTime)
 
