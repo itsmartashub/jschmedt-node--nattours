@@ -9,6 +9,20 @@ const tours = JSON.parse(
 	fs.readFileSync(`${__dirname}/../dev-data/data/tours-simple.json`, 'utf-8')
 )
 
+// router.param mw koju pozivamo u tourRoutes.js
+exports.checkID = (req, res, next, val) => {
+	console.log('Tour id is: ' + val)
+
+	if (req.params.id * 1 > tours.length) {
+		// takodje je jako bitan ovaj return, da ga nema onda bi express tako poslao response, ali bi takodje nastravio da obavlja kod u ovoj checkID f-ji, dakle ovo next() isve van if blocka
+		return res.status(404).json({
+			status: 'fail',
+			message: 'Invalid ID',
+		})
+	}
+
+	next() // NE ZABORAVI - da nismo pozvali ovo next() request response cycle bi zaglavio ovde u ovoj mw f-ji i nece moci da nastavi ka drugom mw-u u stacku
+}
 exports.getAllTours = (req, res) => {
 	console.log(req.requestTime)
 
@@ -25,12 +39,13 @@ exports.getTour = (req, res) => {
 	const tour = tours.find((el) => el.id === id) // ako proveravamo sa if (id > tours.length) , onda ova linija kode ide posle tog if, zbog resursa. zasto uopste da trazimo sa find ako ne postoji taj id
 
 	// if (id > tours.length) {
-	if (!tour) {
-		return res.status(404).json({
-			status: 'fail',
-			message: 'Invalid ID',
-		})
-	}
+	// sada imamo checkID mw umesto ovog
+	// if (!tour) {
+	// 	return res.status(404).json({
+	// 		status: 'fail',
+	// 		message: 'Invalid ID',
+	// 	})
+	// }
 
 	res.status(200).json({
 		status: 'success',
@@ -61,12 +76,14 @@ exports.createTour = (req, res) => {
 }
 exports.updateTour = (req, res) => {
 	// req.params.id * 1 ovako se takodje pretvara String u Number
-	if (req.params.id * 1 > tours.length) {
-		return res.status(404).json({
-			status: 'fail',
-			message: 'Invalid ID',
-		})
-	}
+
+	// sada imamo checkID mw umesto ovog
+	// if (req.params.id * 1 > tours.length) {
+	// 	return res.status(404).json({
+	// 		status: 'fail',
+	// 		message: 'Invalid ID',
+	// 	})
+	// }
 
 	// ovo je fejk, ne za real world jer nismo zaprravo nista editovali, samo za learning purpose
 	res.status(200).json({
@@ -77,12 +94,13 @@ exports.updateTour = (req, res) => {
 	})
 }
 exports.deleteTour = (req, res) => {
-	if (req.params.id * 1 > tours.length) {
-		return res.status(404).json({
-			status: 'fail',
-			message: 'Invalid ID',
-		})
-	}
+	// ovo premestamo u mw f-ju jer se ponavlja u svakoj ovoj f-ji
+	// if (req.params.id * 1 > tours.length) {
+	// 	return res.status(404).json({
+	// 		status: 'fail',
+	// 		message: 'Invalid ID',
+	// 	})
+	// }
 
 	// Inace 204 znaci no content, a to je jer smo ga obrisal
 	res.status(204).json({

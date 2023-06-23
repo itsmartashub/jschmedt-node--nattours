@@ -18,11 +18,11 @@
     "colId": "history",
     "containerId": "",
     "name": "Get Tour By ID",
-    "url": "127.0.0.1:3000/api/v1/tours/23",
+    "url": "127.0.0.1:3000/api/v1/tours",
     "method": "GET",
     "sortNum": 0,
     "created": "2023-06-20T13:29:34.196Z",
-    "modified": "2023-06-20T14:21:17.271Z",
+    "modified": "2023-06-23T14:10:19.802Z",
     "headers": [],
     "params": [],
     "tests": []
@@ -51,16 +51,16 @@
     "colId": "history",
     "containerId": "",
     "name": "Update Tour By ID",
-    "url": "127.0.0.1:3000/api/v1/tours/5",
+    "url": "127.0.0.1:3000/api/v1/tours/111",
     "method": "PATCH",
     "sortNum": 0,
     "created": "2023-06-20T14:31:29.643Z",
-    "modified": "2023-06-20T14:39:05.196Z",
+    "modified": "2023-06-23T14:11:19.589Z",
     "headers": [],
     "params": [],
     "body": {
       "type": "json",
-      "raw": "{\n  \"difficulty\": \"patch\"\n}",
+      "raw": "{\n  \"difficulty\": \"patch\",\n  \"hi from\": \"param mw\"\n}",
       "form": []
     },
     "tests": []
