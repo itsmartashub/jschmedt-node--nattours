@@ -1,11 +1,22 @@
 //////  4) START THE SERVER
+const mongoose = require('mongoose')
 const dotenv = require('dotenv')
+
 dotenv.config({ path: './config.env' }) // path gde se config.env file nalazi. BTW, OVO MORA PRE const app = require('./app'). jer ne mozemo da citamo process.env varijable u app.js ako oni jos nisu konfigurisani, ofc!!
 
 const app = require('./app')
 
-console.log(app.get('env')) // output: development. ovaj env je set by express, ali i nodejs setuje mnooogo environmenta
-console.log(process.env) // nodejs environments
+const DB = process.env.DATABASE.replace(
+	'<PASSWORD>',
+	process.env.DATABASE_PASSWORD
+)
+mongoose.connect(DB).then((conn) => {
+	console.log(conn.connection)
+	console.log('Connected to MongoDB')
+})
+
+// console.log(app.get('env')) // output: development. ovaj env je set by express, ali i nodejs setuje mnooogo environmenta
+// console.log(process.env) // nodejs environments
 
 /* 
 DODAVANJE ENV PROMENLJVIE U process.env:
