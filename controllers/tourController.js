@@ -42,16 +42,26 @@ exports.checkBody = (req, res, next) => {
 	next() // a sledeci mw je createTour
 }
 */
-exports.getAllTours = (req, res) => {
+exports.getAllTours = async (req, res) => {
 	// console.log(req.requestTime)
 
-	res.status(200).json({
-		status: 'success',
-		requestedAt: req.requestTime,
-		// data: { result: tours.length, tours },
-	})
+	try {
+		const tours = await Tour.find() // kada u find() ne prosledimo neki parametar, vratice sve documents
+
+		res.status(200).json({
+			status: 'success',
+			results: tours.length,
+			// requestedAt: req.requestTime,
+			data: { tours },
+		})
+	} catch (error) {
+		res.status(404).json({
+			status: 'fail',
+			message: error,
+		})
+	}
 }
-exports.getTour = (req, res) => {
+exports.getTour = async (req, res) => {
 	/* 
 	// console.log(req.params)
 
@@ -68,10 +78,21 @@ exports.getTour = (req, res) => {
 	}
 	*/
 
-	res.status(200).json({
-		status: 'success',
-		// data: { tour },
-	})
+	try {
+		/* 
+		ovo Tour.findById(req.params.id) je isto kao i Tour.findOne({ _id: req.params.id })  */
+		const tour = await Tour.findById(req.params.id)
+
+		res.status(200).json({
+			status: 'success',
+			data: { tour },
+		})
+	} catch (error) {
+		res.status(404).json({
+			status: 'fail',
+			message: error,
+		})
+	}
 }
 exports.createTour = async (req, res) => {
 	try {
