@@ -4,13 +4,42 @@
     "colId": "90e82cf4-8465-431e-a50f-0672adbc7b38",
     "containerId": "",
     "name": "Get Tours",
-    "url": "{{DOMAIN}}:{{PORT}}/api/v1/tours",
+    "url": "{{DOMAIN}}:{{PORT}}/api/v1/tours?duration=5&difficulty=easy",
     "method": "GET",
     "sortNum": 10000,
     "created": "2023-06-20T13:51:51.428Z",
-    "modified": "2023-06-27T12:08:33.460Z",
+    "modified": "2023-06-27T19:24:09.254Z",
     "headers": [],
-    "params": [],
+    "params": [
+      {
+        "name": "duration",
+        "value": "5",
+        "isPath": false
+      },
+      {
+        "name": "difficulty",
+        "value": "easy",
+        "isPath": false
+      },
+      {
+        "name": "page",
+        "value": "2",
+        "isDisabled": true,
+        "isPath": false
+      },
+      {
+        "name": "sort",
+        "value": "1",
+        "isDisabled": true,
+        "isPath": false
+      },
+      {
+        "name": "limit",
+        "value": "10",
+        "isDisabled": true,
+        "isPath": false
+      }
+    ],
     "tests": []
   },
   {
@@ -36,7 +65,7 @@
     "_id": "908c8226-47c8-4502-8d8d-2839e6625875",
     "colId": "90e82cf4-8465-431e-a50f-0672adbc7b38",
     "containerId": "",
-    "name": "Get Tours By ID",
+    "name": "Get Tour By ID",
     "url": "{{DOMAIN}}:{{PORT}}/api/v1/tours/6499c8c7e01319c92765ac9f",
     "method": "GET",
     "sortNum": 30000,

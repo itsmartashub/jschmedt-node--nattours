@@ -46,8 +46,38 @@ exports.getAllTours = async (req, res) => {
 	// console.log(req.requestTime)
 
 	try {
-		const tours = await Tour.find() // kada u find() ne prosledimo neki parametar, vratice sve documents
+		// === BUILD QUERY
+		const queryObj = { ...req.query } // shallow copy of req object. Moramo shallow copy jer ako obrisemo nesto iz queryObj obrisacemo i iz req.query object, a to ne smemo. Zato pravimo shallow copy od req.query sa {...}
 
+		console.log(req.query, queryObj)
+
+		const excludedFields = ['page', 'sort', 'limit', 'fields']
+		excludedFields.forEach((el) => delete queryObj[el]) // zelimo da obrisemo queryObj sa imenom ovog trenutnog elementa
+		const query = Tour.find(queryObj)
+
+		/* 
+		// const tours = await Tour.find() // kada u find() ne prosledimo neki parametar, vratice sve documents
+		// const tours = await Tour.find(req.query)
+		// const tours = await Tour.find(queryObj)
+
+		// I - ovako se pisu queries in Mongoose
+		const tours = await Tour.find({
+			duration: 5,
+			difficulty: 'easy',
+		})
+
+		// II - ovako se pisu queries in Mongoose sa njegovim special methods. ovo sto je equals moze biti lt, gt, lte, gte
+		const query = Tour.find()
+			.where('duration')
+			.equals(5)
+			.where('difficulty')
+			.equals('easy ')
+		*/
+
+		// === EXECUTE QUERY
+		const tours = await query
+
+		// === SEND RESPONSE
 		res.status(200).json({
 			status: 'success',
 			results: tours.length,
