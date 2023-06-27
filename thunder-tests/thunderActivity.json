@@ -148,5 +148,33 @@
     "headers": [],
     "params": [],
     "tests": []
+  },
+  {
+    "_id": "31cf2509-b6d0-4bda-9e78-18cfc82c7092",
+    "colId": "history",
+    "containerId": "",
+    "name": "https://www.natours.dev/api/v/tours",
+    "url": "https://www.natours.dev/api/v/tours",
+    "method": "GET",
+    "sortNum": 0,
+    "created": "2023-06-27T17:13:02.343Z",
+    "modified": "2023-06-27T17:13:02.343Z",
+    "headers": [],
+    "params": [],
+    "tests": []
+  },
+  {
+    "_id": "0c402d3a-d469-487a-aebf-c4144140486a",
+    "colId": "history",
+    "containerId": "",
+    "name": "REFERENCE GET ALL TOURS",
+    "url": "https://www.natours.dev/api/v1/tours",
+    "method": "GET",
+    "sortNum": 0,
+    "created": "2023-06-27T17:13:09.176Z",
+    "modified": "2023-06-27T17:13:09.176Z",
+    "headers": [],
+    "params": [],
+    "tests": []
   }
 ]

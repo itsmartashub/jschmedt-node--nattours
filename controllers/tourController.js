@@ -28,8 +28,8 @@ exports.checkID = (req, res, next, val) => {
 */
 
 /*
-Create a checkBody mw - check if the body contains the name and price property, if not return 400 (bad request from he client) status code. Add it to the post handler stack
-
+Create a checkBody mw - check if the body contains the name and price property, if not return 400 (bad request from he client) status code. Add it to the post handler stack */
+/*
 exports.checkBody = (req, res, next) => {
 	// console.log(req.body)
 
@@ -114,8 +114,8 @@ exports.createTour = async (req, res) => {
 		postoji validation (taj validation smo radili u tourModel.js za name i price, ono gde je required) error koji ako se desi, ovde ce se catchovati. 400 je bad request */
 		res.status(400).json({
 			status: 'fail',
-			// message: error,
-			message: 'Invalid data sent',
+			message: error,
+			// message: 'Invalid data sent',
 		})
 	}
 
@@ -173,7 +173,7 @@ exports.updateTour = async (req, res) => {
 		})
 	}
 }
-exports.deleteTour = (req, res) => {
+exports.deleteTour = async (req, res) => {
 	/*
 	// ovo premestamo u mw f-ju jer se ponavlja u svakoj ovoj f-ji
 	if (req.params.id * 1 > tours.length) {
@@ -184,11 +184,20 @@ exports.deleteTour = (req, res) => {
 	}
 	*/
 
-	// Inace 204 znaci no content, a to je jer smo ga obrisal
-	res.status(204).json({
-		status: 'success',
-		data: null,
-	})
+	try {
+		await Tour.findByIdAndDelete(req.params.id)
+
+		// Inace 204 znaci no content, a to je jer smo ga obrisal
+		res.status(204).json({
+			status: 'success',
+			data: null,
+		})
+	} catch (error) {
+		res.status(400).json({
+			status: 'fail',
+			message: error,
+		})
+	}
 }
 
 /* i posto ovde ne exportujemo samo jednu stvar, ne mozemo koristriti module.exports = sta_exportujemo, vec umesto const stavljamo exports i dodajemo . pa ime promenljive. I onda idemo u routes/tourRoutes.js i importujemo ih */
