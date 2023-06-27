@@ -142,7 +142,7 @@ exports.createTour = async (req, res) => {
 	// res.send('Done') //! ne smemo dva res da saljemo, i ovaj send i ovaj sa json-om
 	*/
 }
-exports.updateTour = (req, res) => {
+exports.updateTour = async (req, res) => {
 	/* 
 	req.params.id * 1 ovako se takodje pretvara String u Number
 
@@ -156,12 +156,22 @@ exports.updateTour = (req, res) => {
 	*/
 
 	// ovo je fejk, ne za real world jer nismo zaprravo nista editovali, samo za learning purpose
-	res.status(200).json({
-		status: 'success',
-		data: {
-			tour: '<Updated tour here...>',
-		},
-	})
+	try {
+		const tour = await Tour.findByIdAndUpdate(req.params.id, req.body, {
+			new: true, // new document je taj koji ce se vratiti, ovim kazemo da zelimo da se taj document vrati clientu
+			runValidators: true, //
+		})
+
+		res.status(200).json({
+			status: 'success',
+			data: { tour },
+		})
+	} catch (error) {
+		res.status(400).json({
+			status: 'fail',
+			message: 'Invalid data sent',
+		})
+	}
 }
 exports.deleteTour = (req, res) => {
 	/*
