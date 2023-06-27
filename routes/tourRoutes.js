@@ -1,5 +1,5 @@
 const express = require('express')
-const tourController = require('./../controllers/tourController')
+const tourController = require('../controllers/tourController')
 // const {
 // 	getAllTours,
 // 	getTour,
@@ -19,7 +19,8 @@ Create a checkBody mw - check if the body contains the name and price property, 
 router
 	.route('/')
 	.get(tourController.getAllTours)
-	.post(tourController.checkBody, tourController.createTour)
+	// .post(tourController.checkBody, tourController.createTour)
+	.post(tourController.createTour)
 
 // sad cemo da napisemo middleware koji ce da se okine samo kada je ovaj dole id prisutan u url-u
 router
