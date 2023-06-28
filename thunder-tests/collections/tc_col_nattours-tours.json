@@ -1,0 +1,123 @@
+{
+    "_id": "90e82cf4-8465-431e-a50f-0672adbc7b38",
+    "colName": "Nattours - Tours",
+    "created": "2023-06-20T13:51:51.420Z",
+    "sortNum": 10000,
+    "folders": [],
+    "requests": [
+        {
+            "_id": "bc37778e-6046-442a-9d13-ac432ce4cc6f",
+            "colId": "90e82cf4-8465-431e-a50f-0672adbc7b38",
+            "containerId": "",
+            "name": "Get Tours",
+            "url": "{{DOMAIN}}:{{PORT}}/api/v1/tours?duration[gte]=5&difficulty=easy&price[lt]=1500",
+            "method": "GET",
+            "sortNum": 10000,
+            "created": "2023-06-20T13:51:51.428Z",
+            "modified": "2023-06-28T18:34:53.594Z",
+            "headers": [],
+            "params": [
+                {
+                    "name": "duration[gte]",
+                    "value": "5",
+                    "isPath": false
+                },
+                {
+                    "name": "difficulty",
+                    "value": "easy",
+                    "isPath": false
+                },
+                {
+                    "name": "page",
+                    "value": "2",
+                    "isDisabled": true,
+                    "isPath": false
+                },
+                {
+                    "name": "sort",
+                    "value": "1",
+                    "isDisabled": true,
+                    "isPath": false
+                },
+                {
+                    "name": "limit",
+                    "value": "10",
+                    "isDisabled": true,
+                    "isPath": false
+                },
+                {
+                    "name": "price[lt]",
+                    "value": "1500",
+                    "isPath": false
+                }
+            ],
+            "tests": []
+        },
+        {
+            "_id": "3fb91d89-b669-4b6c-8658-94492c2301ec",
+            "colId": "90e82cf4-8465-431e-a50f-0672adbc7b38",
+            "containerId": "",
+            "name": "Create Tour",
+            "url": "{{DOMAIN}}:{{PORT}}/api/v1/tours",
+            "method": "POST",
+            "sortNum": 20000,
+            "created": "2023-06-20T13:52:01.436Z",
+            "modified": "2023-06-27T17:38:45.898Z",
+            "headers": [],
+            "params": [],
+            "body": {
+                "type": "json",
+                "raw": "{\r\n\t\t\t\"name\": \"The Snow Adventurer\",\r\n\t\t\"duration\": 4,\r\n\t\t\"maxGroupSize\": 10,\r\n\t\t\"difficulty\": \"difficult\",\r\n\t\t\"ratingsAverage\": 4.5,\r\n\t\t\"ratingsQuantity\": 13,\r\n\t\t\"price\": 997,\r\n\t\t\"summary\": \"Exciting adventure in the snow with snowboarding and skiing\",\r\n\t\t\"description\": \"Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua, ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum!\\nDolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur, exercitation ullamco laboris nisi ut aliquip. Lorem ipsum dolor sit amet, consectetur adipisicing elit!\",\r\n\t\t\"imageCover\": \"tour-3-cover.jpg\",\r\n\t\t\"images\": [\"tour-3-1.jpg\", \"tour-3-2.jpg\", \"tour-3-3.jpg\"],\r\n\t\t\"startDates\": [\r\n\t\t\t\"2022-01-05,10:00\",\r\n\t\t\t\"2022-02-12,10:00\",\r\n\t\t\t\"2023-01-06,10:00\"\r\n\t\t]\r\n\t}",
+                "form": []
+            },
+            "tests": []
+        },
+        {
+            "_id": "908c8226-47c8-4502-8d8d-2839e6625875",
+            "colId": "90e82cf4-8465-431e-a50f-0672adbc7b38",
+            "containerId": "",
+            "name": "Get Tour By ID",
+            "url": "{{DOMAIN}}:{{PORT}}/api/v1/tours/6499c8c7e01319c92765ac9f",
+            "method": "GET",
+            "sortNum": 30000,
+            "created": "2023-06-20T14:32:31.058Z",
+            "modified": "2023-06-27T13:23:45.382Z",
+            "headers": [],
+            "params": [],
+            "tests": []
+        },
+        {
+            "_id": "26873ba5-8c13-4ed4-b922-2d6fecddeab6",
+            "colId": "90e82cf4-8465-431e-a50f-0672adbc7b38",
+            "containerId": "",
+            "name": "Update Tour By ID",
+            "url": "{{DOMAIN}}:{{PORT}}/api/v1/tours/6499c8c7e01319c92765ac9f",
+            "method": "PATCH",
+            "sortNum": 40000,
+            "created": "2023-06-20T14:32:37.076Z",
+            "modified": "2023-06-27T13:28:05.922Z",
+            "headers": [],
+            "params": [],
+            "body": {
+                "type": "json",
+                "raw": "{\n  \"price\": \"500\"\n}",
+                "form": []
+            },
+            "tests": []
+        },
+        {
+            "_id": "3783ab56-7ab4-4e48-b6aa-a25844e5dd08",
+            "colId": "90e82cf4-8465-431e-a50f-0672adbc7b38",
+            "containerId": "",
+            "name": "Delete Tour by ID",
+            "url": "{{DOMAIN}}:{{PORT}}/api/v1/tours/649b14edbef1352de0cda28f.",
+            "method": "DELETE",
+            "sortNum": 50000,
+            "created": "2023-06-20T16:25:58.937Z",
+            "modified": "2023-06-27T16:58:30.615Z",
+            "headers": [],
+            "params": [],
+            "tests": []
+        }
+    ]
+}

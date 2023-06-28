@@ -28,8 +28,7 @@ exports.checkID = (req, res, next, val) => {
 */
 
 /*
-Create a checkBody mw - check if the body contains the name and price property, if not return 400 (bad request from he client) status code. Add it to the post handler stack */
-/*
+// Create a checkBody mw - check if the body contains the name and price property, if not return 400 (bad request from he client) status code. Add it to the post handler stack 
 exports.checkBody = (req, res, next) => {
 	// console.log(req.body)
 
@@ -46,27 +45,57 @@ exports.getAllTours = async (req, res) => {
 	// console.log(req.requestTime)
 
 	try {
-		// === BUILD QUERY
+		//=== BUILD QUERY
+		//? 1) Filtering
 		const queryObj = { ...req.query } // shallow copy of req object. Moramo shallow copy jer ako obrisemo nesto iz queryObj obrisacemo i iz req.query object, a to ne smemo. Zato pravimo shallow copy od req.query sa {...}
 
-		console.log(req.query, queryObj)
+		// console.log(req.query, queryObj)
 
 		const excludedFields = ['page', 'sort', 'limit', 'fields']
 		excludedFields.forEach((el) => delete queryObj[el]) // zelimo da obrisemo queryObj sa imenom ovog trenutnog elementa
-		const query = Tour.find(queryObj)
+
+		//? 2) Advanced Filtering
+
+		/*
+		Ovako manuelno pisemo filter Object za query u mongodb shellu:
+		```		{ difficulty: 'easy', duration: { $gte: 5} }
+		
+		U url za req za sever ga pisemo ovako:
+		``` 	/api/v1/tours?duration[gte]=5&difficulty=easy
+		i u konzoli na serveru kad logujemo req.query dobijamo: 
+		``` 	{ difficulty: 'easy', duration: { gte: '5'} }
+		dakle jedina razlika je gt bezz $, i sto je '5' string
+		
+		zelimo da gte, gt, lte, lt zamenimo sa $gte, $gt, $lte, $lt  i to cemo odraditi sa regex */
+		let queryStr = JSON.stringify(queryObj)
+
+		/* 
+		ovo \b (before) znaci exactly ta rec, dakle aako imamo lting, necemo lting, vec samo gde ima lt. a \g znaci da replejsuje all of them, dakle ne samo prvi x kad naidje na neki od njig, vec svugde.
+		replace(_regex, _cb) za drugi argument prihvata cb f-ju, koja ima za prvi argument matched word/string, i ono sto vracamo iz te cb f-je je novi string koji riplejsuje stariji. Dakle mi zelimo da dodamo $ */
+		queryStr = queryStr.replace(
+			/\b(gte|gt|lte|lt)\b/g,
+			(match) => `$${match}`
+		)
+		console.log(JSON.parse(queryStr))
+
+		const query = Tour.find(JSON.parse(queryStr))
+		// const query = Tour.find(queryObj)
+
+		//=== EXECUTE QUERY
+		const tours = await query
 
 		/* 
 		// const tours = await Tour.find() // kada u find() ne prosledimo neki parametar, vratice sve documents
 		// const tours = await Tour.find(req.query)
 		// const tours = await Tour.find(queryObj)
 
-		// I - ovako se pisu queries in Mongoose
+		? I - ovako se pisu queries in Mongoose
 		const tours = await Tour.find({
 			duration: 5,
 			difficulty: 'easy',
 		})
 
-		// II - ovako se pisu queries in Mongoose sa njegovim special methods. ovo sto je equals moze biti lt, gt, lte, gte
+		? II - ovako se pisu queries in Mongoose sa njegovim special methods. ovo sto je equals moze biti lt, gt, lte, gte
 		const query = Tour.find()
 			.where('duration')
 			.equals(5)
@@ -74,10 +103,7 @@ exports.getAllTours = async (req, res) => {
 			.equals('easy ')
 		*/
 
-		// === EXECUTE QUERY
-		const tours = await query
-
-		// === SEND RESPONSE
+		//=== SEND RESPONSE
 		res.status(200).json({
 			status: 'success',
 			results: tours.length,
