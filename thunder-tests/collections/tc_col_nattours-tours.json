@@ -10,23 +10,13 @@
             "colId": "90e82cf4-8465-431e-a50f-0672adbc7b38",
             "containerId": "",
             "name": "Get Tours",
-            "url": "{{DOMAIN}}:{{PORT}}/api/v1/tours?duration[gte]=5&difficulty=easy&price[lt]=1500",
+            "url": "{{DOMAIN}}:{{PORT}}/api/v1/tours",
             "method": "GET",
             "sortNum": 10000,
             "created": "2023-06-20T13:51:51.428Z",
-            "modified": "2023-06-28T18:34:53.594Z",
+            "modified": "2023-06-28T19:04:05.359Z",
             "headers": [],
             "params": [
-                {
-                    "name": "duration[gte]",
-                    "value": "5",
-                    "isPath": false
-                },
-                {
-                    "name": "difficulty",
-                    "value": "easy",
-                    "isPath": false
-                },
                 {
                     "name": "page",
                     "value": "2",
@@ -43,11 +33,6 @@
                     "name": "limit",
                     "value": "10",
                     "isDisabled": true,
-                    "isPath": false
-                },
-                {
-                    "name": "price[lt]",
-                    "value": "1500",
                     "isPath": false
                 }
             ],
@@ -91,16 +76,16 @@
             "colId": "90e82cf4-8465-431e-a50f-0672adbc7b38",
             "containerId": "",
             "name": "Update Tour By ID",
-            "url": "{{DOMAIN}}:{{PORT}}/api/v1/tours/6499c8c7e01319c92765ac9f",
+            "url": "{{DOMAIN}}:{{PORT}}/api/v1/tours/649b244a094df06d53cb19b6",
             "method": "PATCH",
             "sortNum": 40000,
             "created": "2023-06-20T14:32:37.076Z",
-            "modified": "2023-06-27T13:28:05.922Z",
+            "modified": "2023-06-28T18:53:10.553Z",
             "headers": [],
             "params": [],
             "body": {
                 "type": "json",
-                "raw": "{\n  \"price\": \"500\"\n}",
+                "raw": "{\n  \"ratingsAverage\": \"4.9\"\n}",
                 "form": []
             },
             "tests": []

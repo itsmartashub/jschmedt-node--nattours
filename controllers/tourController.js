@@ -45,8 +45,8 @@ exports.getAllTours = async (req, res) => {
 	// console.log(req.requestTime)
 
 	try {
-		//=== BUILD QUERY
-		//? 1) Filtering
+		//@ BUILD QUERY
+		//? 1a) Filtering
 		const queryObj = { ...req.query } // shallow copy of req object. Moramo shallow copy jer ako obrisemo nesto iz queryObj obrisacemo i iz req.query object, a to ne smemo. Zato pravimo shallow copy od req.query sa {...}
 
 		// console.log(req.query, queryObj)
@@ -54,15 +54,16 @@ exports.getAllTours = async (req, res) => {
 		const excludedFields = ['page', 'sort', 'limit', 'fields']
 		excludedFields.forEach((el) => delete queryObj[el]) // zelimo da obrisemo queryObj sa imenom ovog trenutnog elementa
 
-		//? 2) Advanced Filtering
+		//? 1b) Advanced Filtering
 
 		/*
 		Ovako manuelno pisemo filter Object za query u mongodb shellu:
 		```		{ difficulty: 'easy', duration: { $gte: 5} }
 		
 		U url za req za sever ga pisemo ovako:
+		```		/api/v1/tours?duration[gte]=5&difficulty=easy&price[lt]=1500
 		``` 	/api/v1/tours?duration[gte]=5&difficulty=easy
-		i u konzoli na serveru kad logujemo req.query dobijamo: 
+		i u konzoli na serveru kad logujemo req.query za ovu drugu url dobijamo: 
 		``` 	{ difficulty: 'easy', duration: { gte: '5'} }
 		dakle jedina razlika je gt bezz $, i sto je '5' string
 		
@@ -78,11 +79,34 @@ exports.getAllTours = async (req, res) => {
 		)
 		console.log(JSON.parse(queryStr))
 
-		const query = Tour.find(JSON.parse(queryStr))
+		let query = Tour.find(JSON.parse(queryStr))
 		// const query = Tour.find(queryObj)
 
-		//=== EXECUTE QUERY
+		//? 2) Sorting
+		/* 
+		``` /api/v1/tours?sort=price   - ascending order
+		``` /api/v1/tours?sort=-price  - descending order */
+		if (req.query.sort) {
+			// ako ovaj sort property postoji to znaci da zelimo da sortiramo
+
+			/* 
+			sort('price ratingsAverage')  - mongoose
+			``` /api/v1/tours?sort=-price,ratingsAverage
+			``` /api/v1/tours?sort=-price,-ratingsAverage */
+			const sortBy = req.query.sort.split(',').join(' ')
+			console.log(sortBy)
+			// query = query.sort(req.query.sort)
+			query = query.sort(sortBy)
+
+			/*
+			default. za slucaj da user ne navede neki sort, mi cemo kreirati difoltni u ovom else. I mi cemo sortirati po datumu kreiranja, od novijeg ka starijem, da oni noviji budu prikazani prvo */
+		} else {
+			query = query.sort('-createdAt')
+		}
+
+		//@ EXECUTE QUERY
 		const tours = await query
+		console.log(tours.createdAt) //todo whyy is undefined???
 
 		/* 
 		// const tours = await Tour.find() // kada u find() ne prosledimo neki parametar, vratice sve documents
@@ -103,7 +127,7 @@ exports.getAllTours = async (req, res) => {
 			.equals('easy ')
 		*/
 
-		//=== SEND RESPONSE
+		//@ SEND RESPONSE
 		res.status(200).json({
 			status: 'success',
 			results: tours.length,
