@@ -74,7 +74,7 @@ const tourSchema = new mongoose.Schema({
 	createdAt: {
 		type: Date,
 		default: Date.now(),
-		select: false,
+		select: false, //! da excludujemo field, recimo ovo je bitno za passworde, njih nikad necemo da includujemo klijentu
 	},
 	startDates: [Date],
 	// secretTour: {

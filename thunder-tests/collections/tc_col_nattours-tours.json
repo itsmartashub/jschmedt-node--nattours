@@ -10,11 +10,11 @@
             "colId": "90e82cf4-8465-431e-a50f-0672adbc7b38",
             "containerId": "",
             "name": "Get Tours",
-            "url": "{{DOMAIN}}:{{PORT}}/api/v1/tours",
+            "url": "{{DOMAIN}}:{{PORT}}/api/v1/tours?fields=name,duration,difficulty,price",
             "method": "GET",
             "sortNum": 10000,
             "created": "2023-06-20T13:51:51.428Z",
-            "modified": "2023-06-28T19:04:05.359Z",
+            "modified": "2023-06-29T09:40:42.655Z",
             "headers": [],
             "params": [
                 {
@@ -33,6 +33,11 @@
                     "name": "limit",
                     "value": "10",
                     "isDisabled": true,
+                    "isPath": false
+                },
+                {
+                    "name": "fields",
+                    "value": "name,duration,difficulty,price",
                     "isPath": false
                 }
             ],

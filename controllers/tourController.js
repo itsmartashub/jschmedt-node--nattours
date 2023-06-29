@@ -55,7 +55,6 @@ exports.getAllTours = async (req, res) => {
 		excludedFields.forEach((el) => delete queryObj[el]) // zelimo da obrisemo queryObj sa imenom ovog trenutnog elementa
 
 		//? 1b) Advanced Filtering
-
 		/*
 		Ovako manuelno pisemo filter Object za query u mongodb shellu:
 		```		{ difficulty: 'easy', duration: { $gte: 5} }
@@ -77,7 +76,7 @@ exports.getAllTours = async (req, res) => {
 			/\b(gte|gt|lte|lt)\b/g,
 			(match) => `$${match}`
 		)
-		console.log(JSON.parse(queryStr))
+		// console.log(JSON.parse(queryStr))
 
 		let query = Tour.find(JSON.parse(queryStr))
 		// const query = Tour.find(queryObj)
@@ -94,7 +93,7 @@ exports.getAllTours = async (req, res) => {
 			``` /api/v1/tours?sort=-price,ratingsAverage
 			``` /api/v1/tours?sort=-price,-ratingsAverage */
 			const sortBy = req.query.sort.split(',').join(' ')
-			console.log(sortBy)
+			// console.log(sortBy)
 			// query = query.sort(req.query.sort)
 			query = query.sort(sortBy)
 
@@ -104,9 +103,22 @@ exports.getAllTours = async (req, res) => {
 			query = query.sort('-createdAt')
 		}
 
+		//? 3) Field limitating
+		//``` /api/v1/tours?fileds=name,duration,difficulty,price
+
+		// console.log(req.query.fields) // name,duration,difficulty,price
+
+		if (req.query.fields) {
+			const fields = req.query.fields.split(',').join(' ') // 'name duration price'
+			query = query.select(fields)
+
+			// ako nemamo nista od fields zadato onda ovo else
+		} else {
+			query = query.select('-__v') // excludujemo --v, dakle imamo sve iz query-a osim __v
+		}
+
 		//@ EXECUTE QUERY
 		const tours = await query
-		console.log(tours.createdAt) //todo whyy is undefined???
 
 		/* 
 		// const tours = await Tour.find() // kada u find() ne prosledimo neki parametar, vratice sve documents
