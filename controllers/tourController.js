@@ -117,8 +117,38 @@ exports.getAllTours = async (req, res) => {
 			query = query.select('-__v') // excludujemo --v, dakle imamo sve iz query-a osim __v
 		}
 
+		//? 4) Pagination
+		//``` /api/v1/tours?page=2&limit=10
+		/* query = query.skip(2).limit(10) 
+
+		10 itema po stranici je ovo limit, a skip je kolicina rezultata koja treba da bude skipovana pre nego sto se i query-ju podaci
+
+		page=2&limit=10  |  query = query.skip(10).limit(10)
+		page=3&limit=10  |  query = query.skip(20).limit(10)
+		page=4&limit=10  |  query = query.skip(30).limit(10)
+		
+			1-10, page 1
+			11-20, page 2
+			21-30, page 3
+			...
+		dakle ako smo na prvoj stranici, moramo da preskocimo 10 resultata (itema) da bismo stigli na stranicu 2
+		
+		(req.query.page - 1) * +req.query.limit) */
+
+		const page = +req.query.page || 1
+		const limit = +req.query.limit || 100
+		const skip = (page - 1) * limit
+
+		query = query.skip(skip).limit(limit)
+
+		if (req.query.page) {
+			const numTours = await Tour.countDocuments() // vraca broj dokumentata
+			if (skip >= numTours) throw new Error('This page does not exist') // ovde kad y ovom try{} bloku throwujemo erorr, momentalno ode u catch{} block
+		}
+
 		//@ EXECUTE QUERY
 		const tours = await query
+		// query.sort().select().skip().limit()  -- ovako bi trebalo da izgleda nas query
 
 		/* 
 		// const tours = await Tour.find() // kada u find() ne prosledimo neki parametar, vratice sve documents
