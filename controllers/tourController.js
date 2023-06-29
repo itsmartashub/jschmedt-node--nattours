@@ -1,5 +1,6 @@
 // const fs = require('fs')
 const Tour = require('../models/tourModel')
+const APIFeatures = require('../utils/apiFeatures')
 
 /*
 	// podatke ne citamo u app.get u callback fji (EventLoop-u), znamo da to opterecuje thread, nema potrebe
@@ -56,107 +57,116 @@ exports.getAllTours = async (req, res) => {
 	try {
 		//@ BUILD QUERY
 		//? 1a) Filtering
-		const queryObj = { ...req.query } // shallow copy of req object. Moramo shallow copy jer ako obrisemo nesto iz queryObj obrisacemo i iz req.query object, a to ne smemo. Zato pravimo shallow copy od req.query sa {...}
+		// const queryObj = { ...req.query } // shallow copy of req object. Moramo shallow copy jer ako obrisemo nesto iz queryObj obrisacemo i iz req.query object, a to ne smemo. Zato pravimo shallow copy od req.query sa {...}
 
-		// console.log(req.query, queryObj)
+		// // console.log(req.query, queryObj)
 
-		const excludedFields = ['page', 'sort', 'limit', 'fields']
-		excludedFields.forEach((el) => delete queryObj[el]) // zelimo da obrisemo queryObj sa imenom ovog trenutnog elementa
+		// const excludedFields = ['page', 'sort', 'limit', 'fields']
+		// excludedFields.forEach((el) => delete queryObj[el]) // zelimo da obrisemo queryObj sa imenom ovog trenutnog elementa
 
 		//? 1b) Advanced Filtering
-		/*
-		Ovako manuelno pisemo filter Object za query u mongodb shellu:
-		```		{ difficulty: 'easy', duration: { $gte: 5} }
-		
-		U url za req za sever ga pisemo ovako:
-		```		/api/v1/tours?duration[gte]=5&difficulty=easy&price[lt]=1500
-		``` 	/api/v1/tours?duration[gte]=5&difficulty=easy
-		i u konzoli na serveru kad logujemo req.query za ovu drugu url dobijamo: 
-		``` 	{ difficulty: 'easy', duration: { gte: '5'} }
-		dakle jedina razlika je gt bezz $, i sto je '5' string
-		
-		zelimo da gte, gt, lte, lt zamenimo sa $gte, $gt, $lte, $lt  i to cemo odraditi sa regex */
-		let queryStr = JSON.stringify(queryObj)
+		// /*
+		// Ovako manuelno pisemo filter Object za query u mongodb shellu:
+		// ```		{ difficulty: 'easy', duration: { $gte: 5} }
 
-		/* 
-		ovo \b (before) znaci exactly ta rec, dakle aako imamo lting, necemo lting, vec samo gde ima lt. a \g znaci da replejsuje all of them, dakle ne samo prvi x kad naidje na neki od njig, vec svugde.
-		replace(_regex, _cb) za drugi argument prihvata cb f-ju, koja ima za prvi argument matched word/string, i ono sto vracamo iz te cb f-je je novi string koji riplejsuje stariji. Dakle mi zelimo da dodamo $ */
-		queryStr = queryStr.replace(
-			/\b(gte|gt|lte|lt)\b/g,
-			(match) => `$${match}`
-		)
-		// console.log(JSON.parse(queryStr))
+		// U url za req za sever ga pisemo ovako:
+		// ```		/api/v1/tours?duration[gte]=5&difficulty=easy&price[lt]=1500
+		// ``` 	/api/v1/tours?duration[gte]=5&difficulty=easy
+		// i u konzoli na serveru kad logujemo req.query za ovu drugu url dobijamo:
+		// ``` 	{ difficulty: 'easy', duration: { gte: '5'} }
+		// dakle jedina razlika je gt bezz $, i sto je '5' string
 
-		let query = Tour.find(JSON.parse(queryStr))
-		// const query = Tour.find(queryObj)
+		// zelimo da gte, gt, lte, lt zamenimo sa $gte, $gt, $lte, $lt  i to cemo odraditi sa regex */
+		// let queryStr = JSON.stringify(queryObj)
+
+		// /*
+		// ovo \b (before) znaci exactly ta rec, dakle aako imamo lting, necemo lting, vec samo gde ima lt. a \g znaci da replejsuje all of them, dakle ne samo prvi x kad naidje na neki od njig, vec svugde.
+		// replace(_regex, _cb) za drugi argument prihvata cb f-ju, koja ima za prvi argument matched word/string, i ono sto vracamo iz te cb f-je je novi string koji riplejsuje stariji. Dakle mi zelimo da dodamo $ */
+		// queryStr = queryStr.replace(
+		// 	/\b(gte|gt|lte|lt)\b/g,
+		// 	(match) => `$${match}`
+		// )
+		// // console.log(JSON.parse(queryStr))
+
+		// let query = Tour.find(JSON.parse(queryStr))
+		// // const query = Tour.find(queryObj)
 
 		//? 2) Sorting
-		/* 
-		``` /api/v1/tours?sort=price   - ascending order
-		``` /api/v1/tours?sort=-price  - descending order */
-		if (req.query.sort) {
-			// ako ovaj sort property postoji to znaci da zelimo da sortiramo
+		// /*
+		// ``` /api/v1/tours?sort=price   - ascending order
+		// ``` /api/v1/tours?sort=-price  - descending order */
+		// if (req.query.sort) {
+		// 	// ako ovaj sort property postoji to znaci da zelimo da sortiramo
 
-			/* 
-			sort('price ratingsAverage')  - mongoose
-			``` /api/v1/tours?sort=-price,ratingsAverage
-			``` /api/v1/tours?sort=-price,-ratingsAverage */
-			const sortBy = req.query.sort.split(',').join(' ')
-			// console.log(sortBy)
-			// query = query.sort(req.query.sort)
-			query = query.sort(sortBy)
+		// 	/*
+		// 	sort('price ratingsAverage')  - mongoose
+		// 	``` /api/v1/tours?sort=-price,ratingsAverage
+		// 	``` /api/v1/tours?sort=-price,-ratingsAverage */
+		// 	const sortBy = req.query.sort.split(',').join(' ')
+		// 	// console.log(sortBy)
+		// 	// query = query.sort(req.query.sort)
+		// 	query = query.sort(sortBy)
 
-			/*
-			default. za slucaj da user ne navede neki sort, mi cemo kreirati difoltni u ovom else. I mi cemo sortirati po datumu kreiranja, od novijeg ka starijem, da oni noviji budu prikazani prvo */
-		} else {
-			query = query.sort('-createdAt')
-		}
+		// 	/*
+		// 	default. za slucaj da user ne navede neki sort, mi cemo kreirati difoltni u ovom else. I mi cemo sortirati po datumu kreiranja, od novijeg ka starijem, da oni noviji budu prikazani prvo */
+		// } else {
+		// 	query = query.sort('-createdAt')
+		// }
 
 		//? 3) Field limitating
-		//``` /api/v1/tours?fileds=name,duration,difficulty,price
+		// //``` /api/v1/tours?fileds=name,duration,difficulty,price
 
-		// console.log(req.query.fields) // name,duration,difficulty,price
+		// // console.log(req.query.fields) // name,duration,difficulty,price
 
-		if (req.query.fields) {
-			const fields = req.query.fields.split(',').join(' ') // 'name duration price'
-			query = query.select(fields)
+		// if (req.query.fields) {
+		// 	const fields = req.query.fields.split(',').join(' ') // 'name duration price'
+		// 	query = query.select(fields)
 
-			// ako nemamo nista od fields zadato onda ovo else
-		} else {
-			query = query.select('-__v') // excludujemo --v, dakle imamo sve iz query-a osim __v
-		}
+		// 	// ako nemamo nista od fields zadato onda ovo else
+		// } else {
+		// 	query = query.select('-__v') // excludujemo --v, dakle imamo sve iz query-a osim __v
+		// }
 
 		//? 4) Pagination
-		//``` /api/v1/tours?page=2&limit=10
-		/* query = query.skip(2).limit(10) 
+		// //``` /api/v1/tours?page=2&limit=10
+		// /* query = query.skip(2).limit(10)
 
-		10 itema po stranici je ovo limit, a skip je kolicina rezultata koja treba da bude skipovana pre nego sto se i query-ju podaci
+		// 10 itema po stranici je ovo limit, a skip je kolicina rezultata koja treba da bude skipovana pre nego sto se i query-ju podaci
 
-		page=2&limit=10  |  query = query.skip(10).limit(10)
-		page=3&limit=10  |  query = query.skip(20).limit(10)
-		page=4&limit=10  |  query = query.skip(30).limit(10)
-		
-			1-10, page 1
-			11-20, page 2
-			21-30, page 3
-			...
-		dakle ako smo na prvoj stranici, moramo da preskocimo 10 resultata (itema) da bismo stigli na stranicu 2
-		
-		(req.query.page - 1) * +req.query.limit) */
+		// page=2&limit=10  |  query = query.skip(10).limit(10)
+		// page=3&limit=10  |  query = query.skip(20).limit(10)
+		// page=4&limit=10  |  query = query.skip(30).limit(10)
 
-		const page = +req.query.page || 1
-		const limit = +req.query.limit || 100
-		const skip = (page - 1) * limit
+		// 	1-10, page 1
+		// 	11-20, page 2
+		// 	21-30, page 3
+		// 	...
+		// dakle ako smo na prvoj stranici, moramo da preskocimo 10 resultata (itema) da bismo stigli na stranicu 2
 
-		query = query.skip(skip).limit(limit)
+		// (req.query.page - 1) * +req.query.limit) */
 
-		if (req.query.page) {
-			const numTours = await Tour.countDocuments() // vraca broj dokumentata
-			if (skip >= numTours) throw new Error('This page does not exist') // ovde kad y ovom try{} bloku throwujemo erorr, momentalno ode u catch{} block
-		}
+		// const page = +req.query.page || 1
+		// const limit = +req.query.limit || 100
+		// const skip = (page - 1) * limit
+
+		// query = query.skip(skip).limit(limit)
+
+		// if (req.query.page) {
+		// 	const numTours = await Tour.countDocuments() // vraca broj dokumentata
+		// 	if (skip >= numTours) throw new Error('This page does not exist') // ovde kad y ovom try{} bloku throwujemo erorr, momentalno ode u catch{} block
+		// }
 
 		//@ EXECUTE QUERY
-		const tours = await query
+		// query object kreiramo sa Tour.find(), a query string je req.query
+		const features = new APIFeatures(Tour.find(), req.query)
+			.filter()
+			.sort()
+			.limitFields()
+			.paginate()
+
+		const tours = await features.query
+
+		// const tours = await query
 		// query.sort().select().skip().limit()  -- ovako bi trebalo da izgleda nas query
 
 		/* 

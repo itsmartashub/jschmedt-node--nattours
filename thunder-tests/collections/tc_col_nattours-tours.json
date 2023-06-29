@@ -10,11 +10,11 @@
             "colId": "90e82cf4-8465-431e-a50f-0672adbc7b38",
             "containerId": "",
             "name": "Get Tours",
-            "url": "{{DOMAIN}}:{{PORT}}/api/v1/tours/top-5-cheap",
+            "url": "{{DOMAIN}}:{{PORT}}/api/v1/tours?difficulty=easy&duration[gte]=5&price[lt]=1500&limit=5",
             "method": "GET",
             "sortNum": 10000,
             "created": "2023-06-20T13:51:51.428Z",
-            "modified": "2023-06-29T11:55:09.443Z",
+            "modified": "2023-06-29T12:30:44.828Z",
             "headers": [],
             "params": [
                 {
@@ -33,6 +33,26 @@
                     "name": "limit",
                     "value": "10",
                     "isDisabled": true,
+                    "isPath": false
+                },
+                {
+                    "name": "difficulty",
+                    "value": "easy",
+                    "isPath": false
+                },
+                {
+                    "name": "duration[gte]",
+                    "value": "5",
+                    "isPath": false
+                },
+                {
+                    "name": "price[lt]",
+                    "value": "1500",
+                    "isPath": false
+                },
+                {
+                    "name": "limit",
+                    "value": "5",
                     "isPath": false
                 }
             ],
@@ -100,6 +120,20 @@
             "sortNum": 50000,
             "created": "2023-06-20T16:25:58.937Z",
             "modified": "2023-06-27T16:58:30.615Z",
+            "headers": [],
+            "params": [],
+            "tests": []
+        },
+        {
+            "_id": "184ec128-f97d-4ed5-bd58-16624132ac95",
+            "colId": "90e82cf4-8465-431e-a50f-0672adbc7b38",
+            "containerId": "",
+            "name": "Get Top 5 Cheap Tours",
+            "url": "{{DOMAIN}}:{{PORT}}/api/v1/tours/top-5-cheap",
+            "method": "GET",
+            "sortNum": 60000,
+            "created": "2023-06-29T12:28:52.876Z",
+            "modified": "2023-06-29T12:28:58.036Z",
             "headers": [],
             "params": [],
             "tests": []
