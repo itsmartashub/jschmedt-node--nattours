@@ -1,4 +1,5 @@
 const mongoose = require('mongoose')
+const slugify = require('slugify')
 
 const tourSchema = new mongoose.Schema(
 	{
@@ -98,6 +99,39 @@ const tourSchema = new mongoose.Schema(
 I posto je ovo vise deo biznis logike, a ne app, ovo radimo u tourModel.js, a ne tourController.js */
 tourSchema.virtual('durationWeeks').get(function () {
 	return this.duration / 7
+})
+
+/* ? DOCUMENT MIDDLEWARE, runs before .save() and .create(), ali ne i kad vrsimo .insertMany()
+Postoje 4 vrste middleware u mongoose:
+	1. Documents
+	2. Query
+	3. Aggregate
+	4. Model
+
+Document Middleware utice na trenutnog procesuiranog documenta.
+pre() mw se pokrene PRE eventa koji navedemo u zagradi, u ovom slucaju ce to biti 'save' event. Drugi parametar je cb f-ja koja ce se pozvati pre nego se document sacuva u db.
+! Ovaj mw ce se izvrsiti samo y .save() i ,create(), u .insertMany() nece */
+tourSchema.pre('save', function (next) {
+	// svaki middleware ima pristup next-u
+	// console.log(this) // this upucuje na trenutni procesuirani doc
+	/* 
+	Jesmo mi ovde definisali slug, tj pokusavamo da ga setujemo, ali posto on trenutno ne postoji y Schemi, nece se nista dogoditi. Moramo dakle da ga definisemo u Schemi gore */
+	this.slug = slugify(this.name, { lower: true })
+
+	next() // i to poziva next mw u stack-u
+})
+
+// neko zove mw neko zove HOOK
+tourSchema.pre('save', function (next) {
+	// this.find({ secretTour: { $ne: true } })
+	console.log('Will save document...')
+	next()
+})
+
+/* post() mw ima pristup ne samo next-u, vec i documentu koji je upravo sacuvan u db. post() mw fn se izvrsava NAKON STO SU SVE pre() mw f-je izvrsene */
+tourSchema.post('save', function (doc, next) {
+	console.log(doc)
+	next()
 })
 
 const Tour = mongoose.model('Tour', tourSchema) // obicaj je da se koristi uppercase, prvi argument je ime modela, a drugi je shema
