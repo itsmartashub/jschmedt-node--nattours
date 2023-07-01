@@ -9,7 +9,7 @@
             "_id": "bc37778e-6046-442a-9d13-ac432ce4cc6f",
             "colId": "90e82cf4-8465-431e-a50f-0672adbc7b38",
             "containerId": "",
-            "name": "Get Tours",
+            "name": "Get All Tours",
             "url": "{{DOMAIN}}:{{PORT}}/api/v1/tours",
             "method": "GET",
             "sortNum": 10000,
