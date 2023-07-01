@@ -10,11 +10,11 @@
             "colId": "90e82cf4-8465-431e-a50f-0672adbc7b38",
             "containerId": "",
             "name": "Get Tours",
-            "url": "{{DOMAIN}}:{{PORT}}/api/v1/tours?difficulty=easy&duration[gte]=5&price[lt]=1500&limit=5",
+            "url": "{{DOMAIN}}:{{PORT}}/api/v1/tours",
             "method": "GET",
             "sortNum": 10000,
             "created": "2023-06-20T13:51:51.428Z",
-            "modified": "2023-06-29T12:30:44.828Z",
+            "modified": "2023-07-01T11:40:34.809Z",
             "headers": [],
             "params": [
                 {
@@ -33,26 +33,6 @@
                     "name": "limit",
                     "value": "10",
                     "isDisabled": true,
-                    "isPath": false
-                },
-                {
-                    "name": "difficulty",
-                    "value": "easy",
-                    "isPath": false
-                },
-                {
-                    "name": "duration[gte]",
-                    "value": "5",
-                    "isPath": false
-                },
-                {
-                    "name": "price[lt]",
-                    "value": "1500",
-                    "isPath": false
-                },
-                {
-                    "name": "limit",
-                    "value": "5",
                     "isPath": false
                 }
             ],
@@ -134,6 +114,20 @@
             "sortNum": 60000,
             "created": "2023-06-29T12:28:52.876Z",
             "modified": "2023-06-29T12:28:58.036Z",
+            "headers": [],
+            "params": [],
+            "tests": []
+        },
+        {
+            "_id": "ec6c36d3-4c91-4bbe-b898-4d3de8ae5736",
+            "colId": "90e82cf4-8465-431e-a50f-0672adbc7b38",
+            "containerId": "",
+            "name": "Get Tour Stats",
+            "url": "{{DOMAIN}}:{{PORT}}/api/v1/tours/tour-stats",
+            "method": "GET",
+            "sortNum": 70000,
+            "created": "2023-07-01T11:29:31.322Z",
+            "modified": "2023-07-01T11:30:26.487Z",
             "headers": [],
             "params": [],
             "tests": []

@@ -341,4 +341,47 @@ exports.deleteTour = async (req, res) => {
 	}
 }
 
+// ? Pipeline
+exports.getTourStats = async (req, res) => {
+	try {
+		// aggregation pipeline, kao neki regular query, samo sto ovde mozemo da manipulisemo podacima u vise koraka. Te korake definisemo u aggr array, i oni se nazivaju stages
+		const stats = await Tour.aggregate([
+			{
+				$match: { ratingsAverage: { $gte: 4.5 } },
+			},
+			{
+				$group: {
+					//_id: null, // kako zelimo da grupisemo. Za sad necemo da navodimo nista, jer zelimo da sve bude u jednoj grupi da mozemo da kalkulisemo statiskiku za sve tours zajedno, a ne odvojene grupama
+					// _id: '$ratingsAverage',
+					_id: { $toUpper: '$difficulty' },
+					numTours: { $sum: 1 }, // dodajemo 1 za svaki document da bismo izracunali koliko ukupno ima tour documenta
+					numRatings: { $sum: '$ratingsQuantity' },
+					avgRating: { $avg: '$ratingsAverage' },
+					avgPrice: { $avg: '$price' },
+					minPrice: { $min: '$price' },
+					maxPrice: { $max: '$price' },
+				},
+			},
+			{
+				$sort: { avgPrice: 1 },
+			},
+			// {
+			// 	$match: { _id: { $ne: 'EASY' } }, // selectujemo sve documente koji nisu EASY
+			// },
+		])
+
+		console.log(stats)
+
+		res.status(200).json({
+			status: 'success',
+			data: { stats },
+		})
+	} catch (error) {
+		res.status(400).json({
+			status: 'fail',
+			message: error,
+		})
+	}
+}
+
 /* i posto ovde ne exportujemo samo jednu stvar, ne mozemo koristriti module.exports = sta_exportujemo, vec umesto const stavljamo exports i dodajemo . pa ime promenljive. I onda idemo u routes/tourRoutes.js i importujemo ih */
