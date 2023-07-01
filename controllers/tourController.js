@@ -384,4 +384,118 @@ exports.getTourStats = async (req, res) => {
 	}
 }
 
+// @ Realword Bizz Problem - treba da dobijemo koji mesec je sa kojim tours najzauzetinji u toku godine
+exports.getMonthlyPlan = async (req, res) => {
+	try {
+		const year = +req.params.year // 2021
+
+		const plan = await Tour.aggregate([
+			{
+				/* 
+				Svaki tours doc ima niz datuma u "startsDates", dakle datumi kad je koji tour poceo.
+				Zelimo da countujemo koliko je tour-a bilo za svaki mesec u datoj godini. Dakle, za pocetak cemo se fokusirati na mesece, njih cemo "cupati". Tipa, jedna tour je bila u maju, i neka tamo treva tour je isto bilo, i sl. Najlaksi nacin da ihb dodamo sve zaj jeste da imamo jedan tour za svaki od ovig datuma -- WTF. A to kao mozemo da radimo sa aggregation pipeline. Postoji stage za to, i zove se $unwind - deconstract an array fields from the input documents, and then output one document for each element of the array */
+				$unwind: '$startDates',
+			},
+			{
+				$match: {
+					/* select the documents by qyert
+					zelimo da date bude veci od 1. Januar trenutne godine, recimo 2021, i manje od 1. Januar 2022 */
+					startDates: {
+						$gte: new Date(`${year}-01-01`),
+						$lte: new Date(`${year}-12-31`),
+					},
+				},
+			},
+			{
+				$group: {
+					_id: { $month: '$startDates' }, // extractujemo month iz datuma. $startDates je ime field-a iz kog hocemo da extractujemo month. ovo _id znaci da grupisemo by the month
+
+					numTourStarts: { $sum: 1 }, // sad ono sto je nama je potrebno sve vreme je da odredimo koliko tours-a pocinje u tom i tom mesecu. I za to cemo samo da countujemo amount of tours that have certain month
+
+					tours: { $push: '$name' }, // a ono najbitnije je ne samo koliko tours, nego i KOJE tours
+				},
+			},
+			{
+				$addFields: { month: '$_id' },
+			},
+			{
+				$project: {
+					// svakom polju dodajemo 1 ili 0. 0 znaci da vise ne prikazujemo to ,a 1 da prikazujemo. Dakle vrednost _id smo prvo premestili u month sa addFields, i sad ga uklanjamo sa _id: 0
+					_id: 0,
+				},
+			},
+			{
+				$sort: { numTourStarts: -1 }, // -1 znaci descending, dakle pocinjemo sa najvecim brojem
+			},
+			// {
+			// 	$limit: 6, // da prikaze samo 6 documents recimo. Ali to u ovom slucaju nije korisno, samo je Jonas hteo da pokaze da i to moze
+			// },
+		])
+
+		/* ``` OUTPUT
+		"plan": [
+			{
+				numTourStarts: 3,
+				tours: ['The Sports Lover', 'The Forest Hiker', 'The Sea Explorer'],
+				month: 7,
+			},
+			{
+				numTourStarts: 2,
+				tours: ['The Park Camper', 'The Sea Explorer'],
+				month: 8,
+			},
+			{
+				numTourStarts: 2,
+				tours: ['The Sports Lover', 'The Wine Taster'],
+				month: 9,
+			},
+			{
+				numTourStarts: 2,
+				tours: ['The City Wanderer', 'The Sea Explorer'],
+				month: 6,
+			},
+			{
+				numTourStarts: 2,
+				tours: ['The City Wanderer', 'The Star Gazer'],
+				month: 3,
+			},
+			{
+				numTourStarts: 2,
+				tours: ['The Wine Taster', 'The Forest Hiker'],
+				month: 4,
+			},
+			{
+				numTourStarts: 2,
+				tours: ['The Forest Hiker', 'The Star Gazer'],
+				month: 10,
+			},
+			{
+				numTourStarts: 1,
+				tours: ['The Northern Lights'],
+				month: 12,
+			},
+			{
+				numTourStarts: 1,
+				tours: ['The City Wanderer'],
+				month: 5,
+			},
+			{
+				numTourStarts: 1,
+				tours: ['The Wine Taster'],
+				month: 2,
+			},
+		]
+	*/
+		res.status(200).json({
+			status: 'success',
+			data: { plan },
+		})
+	} catch (error) {
+		res.status(400).json({
+			status: 'fail',
+			message: error,
+		})
+	}
+}
+
 /* i posto ovde ne exportujemo samo jednu stvar, ne mozemo koristriti module.exports = sta_exportujemo, vec umesto const stavljamo exports i dodajemo . pa ime promenljive. I onda idemo u routes/tourRoutes.js i importujemo ih */

@@ -190,5 +190,19 @@
         "headers": [],
         "params": [],
         "tests": []
+    },
+    {
+        "_id": "9df856e4-1910-4452-bd96-a546bdf03d3b",
+        "colId": "history",
+        "containerId": "",
+        "name": "Get Monthly Tour",
+        "url": "{{DOMAIN}}:{{PORT}}/api/v1/monthly-tour/",
+        "method": "GET",
+        "sortNum": 0,
+        "created": "2023-07-01T12:47:03.494Z",
+        "modified": "2023-07-01T12:47:03.494Z",
+        "headers": [],
+        "params": [],
+        "tests": []
     }
 ]

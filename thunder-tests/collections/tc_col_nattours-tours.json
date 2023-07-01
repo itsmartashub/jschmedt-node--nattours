@@ -131,6 +131,20 @@
             "headers": [],
             "params": [],
             "tests": []
+        },
+        {
+            "_id": "e410f3a9-3484-4249-bf14-695773e3ced2",
+            "colId": "90e82cf4-8465-431e-a50f-0672adbc7b38",
+            "containerId": "",
+            "name": "Get Monthly Plan By YEar",
+            "url": "{{DOMAIN}}:{{PORT}}/api/v1/tours/monthly-plan/2021",
+            "method": "GET",
+            "sortNum": 80000,
+            "created": "2023-07-01T12:47:27.160Z",
+            "modified": "2023-07-01T12:49:20.004Z",
+            "headers": [],
+            "params": [],
+            "tests": []
         }
     ]
 }

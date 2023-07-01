@@ -26,6 +26,7 @@ sad cemo da napisemo middleware koji ce da se okine samo kada je ovaj dole :id p
 // router.param('id', tourController.checkID)
 
 router.route('/tour-stats').get(tourController.getTourStats)
+router.route('/monthly-plan/:year').get(tourController.getMonthlyPlan)
 
 /*
 Create a checkBody mw - check if the body contains the name and price property, if not return 400 (bad request from he client) status code. Add it to the post handler stack */
