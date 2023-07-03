@@ -7,11 +7,11 @@ const userRouter = require('./routes/userRoutes')
 const app = express()
 
 /* ///////////////////////////////////////////
-	1) MIDDLEWARES
+	@ 1) MIDDLEWARES
 /////////////////////////////////////////// */
 if (process.env.NODE_ENV === 'development') {
-	app.use(morgan('dev')) // GET /api/v1/tours 200 8.129 ms - 8656
-	// app.use(morgan('tiny')) // GET /api/v1/tours 200 8656 - 7.153 ms (ovo 200 nije obojeno i drugi redosled)
+	app.use(morgan('dev')) //``` GET /api/v1/tours 200 8.129 ms - 8656
+	// app.use(morgan('tiny')) //``` GET /api/v1/tours 200 8656 - 7.153 ms (ovo 200 nije obojeno i drugi redosled)
 }
 
 app.use(express.json()) // middleware je u sustini f-ja koja moze da modifikuje podatke koji nam stizu na server, dakle stoji in the middle of the req i res. Ako ovo zakomentarisemo body je undefined, odn nemamo ga vise
@@ -30,7 +30,7 @@ app.use((req, res, next) => {
 })
 
 /* ////////////////////////////////////////////
-	2) ROUTE HANDLES
+	@ 2) ROUTE HANDLES
  	OVO JE NACIN 1
 //////////////////////////////////////////// */
 /* 
@@ -62,12 +62,12 @@ app.delete('/api/v1/tours/:id', deleteTour)
 */
 
 /* ///////////////////////////////////////////
- 	3) ROUTES
+ 	@ 3) ROUTES
  	OVO JE NACIN 2 sa app route koji omogucava chain-ovanje http method-a koji imaju isti http path
 /////////////////////////////////////////// */
 
+//? PRE KORISCENJA ROUTER MIDDLEWARE
 /* 
-// PRE KORISCENJA ROUTER MIDDLEWARE
 app.route('/api/v1/tours').get(getAllTours).post(createTour)
 
 
@@ -92,8 +92,8 @@ app.route('/api/v1/tours/:id').get(getTour).patch(updateTour).delete(deleteTour)
 app.route('/api/v1/users').get(getAllUsers).post(createUser)
 app.route('/api/v1/users/:id').get(getUser).patch(updateUser).delete(deleteUser) */
 
+//? ROUTER MIDDLEWARE
 /* 
-// ROUTER MIDDLEWARE
 const tourRouter = express.Router()
 const userRouter = express.Router()
 
@@ -106,12 +106,32 @@ userRouter.route('/:id').get(getUser).patch(updateUser).delete(deleteUser) */
 app.use('/api/v1/tours', tourRouter)
 app.use('/api/v1/users', userRouter)
 
+//? HANDLING UNHANDLED ROUTES MW
 /* svaki naredni mw posle ova dva iznad (tourRouter i userRouter), ako se okine, znaci da ta dva iznad nisu mogla da se hendluju, tj nisu se catchovala. all predtavlja mw za svaki od rikvestova. a * znaci za bilo koju "nepostojecu" rutu.
 ! DAKLE JAKO JE BITNO GDE SMO NAPISALI OVAJ MW */
 app.all('*', (req, res, next) => {
-	res.status(404).json({
-		status: 'fail',
-		message: `Can't find ${req.originalUrl} on this server!`,
+	//? Pre err handling mw
+	// res.status(404).json({
+	// 	status: 'fail',
+	// 	message: `Can't find ${req.originalUrl} on this server!`,
+	// })
+
+	//? Sa err handling mw
+	const err = new Error(`Can't find ${req.originalUrl} on this server!`) // ovaj String u new Error() ce biti err.message property
+	err.status = 'fail'
+	err.statusCode = 404
+
+	next(err) //! ako next() f-ja primi neki argument, nebitno sta je, Express ce automatski znati da je doslo do errora. I skipovace sve nase ostale mw u stacku i poslace  ovaj error koji smo prosledili u nas global error handling mw koiji ce se potom izvrsiti. I ovako cemo da prepravimo svaki error u nasim f-jama.
+})
+
+//? GLOBAL ERROR HANDLING MW
+app.use((err, req, res, next) => {
+	err.statusCode = err.statusCode || 500
+	err.status = err.status || 'error'
+
+	res.status(err.statusCode).json({
+		status: err.status,
+		message: err.message,
 	})
 })
 
