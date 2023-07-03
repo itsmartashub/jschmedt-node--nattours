@@ -1,5 +1,6 @@
 const mongoose = require('mongoose')
 const slugify = require('slugify')
+const validator = require('validator')
 
 const tourSchema = new mongoose.Schema(
 	{
@@ -18,7 +19,10 @@ const tourSchema = new mongoose.Schema(
 				10,
 				'A tour name must have more or equal then 10 characters',
 			],
-			// validate: [validator.isAlpha, 'Tour name must only contain characters']
+			validate: [
+				validator.isAlpha,
+				'Tour name must only contain characters',
+			],
 		},
 		slug: String,
 		duration: {
@@ -33,7 +37,7 @@ const tourSchema = new mongoose.Schema(
 			type: String,
 			required: [true, 'A tour must have a difficulty'],
 			enum: {
-				// enum je validator samo za strings
+				// enum je builtin validator samo za strings
 				values: ['easy', 'medium', 'difficult'],
 				message: 'Difficulty is either: easy, medium, difficult',
 			},
@@ -54,13 +58,15 @@ const tourSchema = new mongoose.Schema(
 		},
 		priceDiscount: {
 			type: Number,
-			// validate: {
-			// 	validator: function (val) {
-			// 		// this only points to current doc on NEW document creation
-			// 		return val < this.price
-			// 	},
-			// 	message: 'Discount price ({VALUE}) should be below regular price',
-			// },
+			// nas custom validation
+			validate: {
+				validator: function (val) {
+					//@ this only points to current doc on NEW document creation. OVO NECE DAKLE RADITI NA .updateTour, SAMO PRILIKOM KREACIJE DOCUMENTA RADI, ALI NE PRILIKO APDEJTA
+					return val < this.price // ako je 100 < 200, 100 je manje od 200, dakle vrati se true, priceDiscount uvek treba da bude manje. A ako jer 250<200, 250 je manje od 200, i to je false, a ako je false onda ce se trigerovati validation error
+				},
+				message:
+					'Discount price ({VALUE}) should be below regular price', // ovo {VALUE} je Mongoose, i on ce imati vrednost ovog val
+			},
 		},
 		summary: {
 			type: String,
