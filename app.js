@@ -19,11 +19,11 @@ app.use(express.json()) // middleware je u sustini f-ja koja moze da modifikuje 
 app.use(express.static(`${__dirname}/public`)) // kada idemo na http://localhost:3000/overview.html recimo, otvorice se taj html file, dakle ne http://localhost:3000/public/overview.html vec bez public, jer public je jednako root folder.
 // takodje, kada ukucamo recimo u browseru u url http://localhost:3000/img/pin.png i otvorice se ta slika, ali NE MOZEMO http://localhost:3000/img/ jer to nije file, to izgleda kao regularna route, a express dakle pokusava da nadje route handler za /img/ sto ne moze jer nismo nista definisali. Dakle ovo radi samo za STATIC FILES
 
-app.use((req, res, next) => {
+/* app.use((req, res, next) => {
 	// sva ova tri parametra mozemo zapravo ovde nazvati kako hocemo, ali drzimo se konvencija. Ovaj middleware se odnosi na svaku route
 	console.log('Hello from the middleware 👋')
 	next()
-})
+}) */
 app.use((req, res, next) => {
 	req.requestTime = new Date().toISOString()
 	next() // ne smemo zaboraviti da pozovemo ovu f-ju
@@ -105,5 +105,14 @@ userRouter.route('/:id').get(getUser).patch(updateUser).delete(deleteUser) */
 // ovo se zove MOUNT of ROUTES. Zapamti da su ovo middlewari za rute, zato mozmeo koristiti app.use(). Dok su oni gore middlewari za citavu app
 app.use('/api/v1/tours', tourRouter)
 app.use('/api/v1/users', userRouter)
+
+/* svaki naredni mw posle ova dva iznad (tourRouter i userRouter), ako se okine, znaci da ta dva iznad nisu mogla da se hendluju, tj nisu se catchovala. all predtavlja mw za svaki od rikvestova. a * znaci za bilo koju "nepostojecu" rutu.
+! DAKLE JAKO JE BITNO GDE SMO NAPISALI OVAJ MW */
+app.all('*', (req, res, next) => {
+	res.status(404).json({
+		status: 'fail',
+		message: `Can't find ${req.originalUrl} on this server!`,
+	})
+})
 
 module.exports = app

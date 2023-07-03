@@ -1,6 +1,6 @@
 const mongoose = require('mongoose')
 const slugify = require('slugify')
-const validator = require('validator')
+// const validator = require('validator')
 
 const tourSchema = new mongoose.Schema(
 	{
@@ -19,10 +19,10 @@ const tourSchema = new mongoose.Schema(
 				10,
 				'A tour name must have more or equal then 10 characters',
 			],
-			validate: [
-				validator.isAlpha,
-				'Tour name must only contain characters',
-			],
+			// validate: [
+			// 	validator.isAlpha,
+			// 	'Tour name must only contain characters',
+			// ],
 		},
 		slug: String,
 		duration: {
@@ -88,10 +88,10 @@ const tourSchema = new mongoose.Schema(
 			select: false, //! da excludujemo field, recimo ovo je bitno za passworde, njih nikad necemo da includujemo klijentu
 		},
 		startDates: [Date],
-		// secretTour: {
-		// 	type: Boolean,
-		// 	default: false,
-		// },
+		secretTour: {
+			type: Boolean,
+			default: false,
+		},
 	},
 
 	//? SCHEMA OPTIONS

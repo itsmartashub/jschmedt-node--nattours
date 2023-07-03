@@ -10,11 +10,11 @@
             "colId": "90e82cf4-8465-431e-a50f-0672adbc7b38",
             "containerId": "",
             "name": "Get All Tours",
-            "url": "{{DOMAIN}}:{{PORT}}/api/v1/tours",
+            "url": "{{DOMAIN}}:{{PORT}}/api/tours",
             "method": "GET",
             "sortNum": 10000,
             "created": "2023-06-20T13:51:51.428Z",
-            "modified": "2023-07-01T11:40:34.809Z",
+            "modified": "2023-07-03T19:25:25.123Z",
             "headers": [],
             "params": [
                 {
@@ -47,12 +47,12 @@
             "method": "POST",
             "sortNum": 20000,
             "created": "2023-06-20T13:52:01.436Z",
-            "modified": "2023-07-03T15:08:34.082Z",
+            "modified": "2023-07-03T15:54:07.919Z",
             "headers": [],
             "params": [],
             "body": {
                 "type": "json",
-                "raw": "{\n\t\t\"name\": \"Test Tour Custom Validation - Price \",\n\t\t\"duration\": 1,\n\t\t\"maxGroupSize\": 1,\n\t\t\"difficulty\": \"difficult\",\n\t\t\"price\": 200,\n\t\t\"priceDiscount\": 250,\n\t\t\"summary\": \"Test tour\",\n\t\t\"imageCover\":\"tour-3-cover.jpg\",\n\t\t\"ratingsAverage\": 4\n\t}",
+                "raw": "{\n    \"name\": \"Super Secret Tour\",\n    \"duration\": 1,\n    \"maxGroupSize\": 1,\n    \"difficulty\": \"difficult\",\n    \"ratingsAverage\": 4.5,\n    \"ratingsQuantity\": 0,\n    \"secretTour\": true,\n    \"price\": 1,\n    \"summary\": \"Test Tour\",\n    \"imageCover\": \"tour-3-cover.jpg\",\n    \"images\": [\n      \"tour-3-1.jpg\",\n      \"tour-3-2.jpg\",\n      \"tour-3-3.jpg\"\n    ],\n    \"startDates\": [\n      \"2022-01-05T09:00:00.000Z\",\n      \"2022-02-12T09:00:00.000Z\",\n      \"2023-01-06T09:00:00.000Z\"\n    ]\n\t}",
                 "form": []
             },
             "tests": []
