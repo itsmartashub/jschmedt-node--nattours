@@ -300,7 +300,7 @@ exports.updateTour = async (req, res) => {
 	try {
 		const tour = await Tour.findByIdAndUpdate(req.params.id, req.body, {
 			new: true, // new document je taj koji ce se vratiti, ovim kazemo da zelimo da se taj document vrati clientu
-			runValidators: true, //
+			runValidators: true, // samo zbog ovog ce se validatori pokrenuti ne samo prvi put kad kreiramo nesto vec i kad apdejtujemo neki podatak
 		})
 
 		res.status(200).json({
