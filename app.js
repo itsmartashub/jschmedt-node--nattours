@@ -1,6 +1,8 @@
 const express = require('express')
 const morgan = require('morgan') // 3rdParty middleware
 
+const AppError = require('./utils/appError')
+const globalErrorHandler = require('./controllers/errorController')
 const tourRouter = require('./routes/tourRoutes')
 const userRouter = require('./routes/userRoutes')
 
@@ -110,6 +112,7 @@ app.use('/api/v1/users', userRouter)
 /* svaki naredni mw posle ova dva iznad (tourRouter i userRouter), ako se okine, znaci da ta dva iznad nisu mogla da se hendluju, tj nisu se catchovala. all predtavlja mw za svaki od rikvestova. a * znaci za bilo koju "nepostojecu" rutu.
 ! DAKLE JAKO JE BITNO GDE SMO NAPISALI OVAJ MW */
 app.all('*', (req, res, next) => {
+	/*
 	//? Pre err handling mw
 	// res.status(404).json({
 	// 	status: 'fail',
@@ -122,17 +125,13 @@ app.all('*', (req, res, next) => {
 	err.statusCode = 404
 
 	next(err) //! ako next() f-ja primi neki argument, nebitno sta je, Express ce automatski znati da je doslo do errora. I skipovace sve nase ostale mw u stacku i poslace  ovaj error koji smo prosledili u nas global error handling mw koiji ce se potom izvrsiti. I ovako cemo da prepravimo svaki error u nasim f-jama.
+	*/
+
+	//? SA APPERROR CLASSOM
+	next(new AppError(`Can't find ${req.originalUrl} on this server!`, 404))
 })
 
 //? GLOBAL ERROR HANDLING MW
-app.use((err, req, res, next) => {
-	err.statusCode = err.statusCode || 500
-	err.status = err.status || 'error'
-
-	res.status(err.statusCode).json({
-		status: err.status,
-		message: err.message,
-	})
-})
+app.use(globalErrorHandler)
 
 module.exports = app
