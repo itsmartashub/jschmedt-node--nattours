@@ -2,6 +2,7 @@
 const Tour = require('../models/tourModel')
 const APIFeatures = require('../utils/apiFeatures')
 const catchAsync = require('../utils/catchAsync')
+const AppError = require('../utils/appError')
 
 /*
 	// podatke ne citamo u app.get u callback fji (EventLoop-u), znamo da to opterecuje thread, nema potrebe
@@ -217,8 +218,10 @@ exports.getTour = catchAsync(async (req, res, next) => {
 	*/
 
 	/* 
-		ovo Tour.findById(req.params.id) je isto kao i Tour.findOne({ _id: req.params.id })  */
+	ovo Tour.findById(req.params.id) je isto kao i Tour.findOne({ _id: req.params.id })  */
 	const tour = await Tour.findById(req.params.id)
+
+	if (!tour) return next(new AppError('No tour found with that ID', 404))
 
 	res.status(200).json({
 		status: 'success',
@@ -303,6 +306,8 @@ exports.updateTour = catchAsync(async (req, res, next) => {
 		runValidators: true, // samo zbog ovog ce se validatori pokrenuti ne samo prvi put kad kreiramo nesto vec i kad apdejtujemo neki podatak
 	})
 
+	if (!tour) return next(new AppError('No tour found with that ID', 404))
+
 	res.status(200).json({
 		status: 'success',
 		data: { tour },
@@ -320,7 +325,9 @@ exports.deleteTour = catchAsync(async (req, res, next) => {
 	}
 	*/
 
-	await Tour.findByIdAndDelete(req.params.id)
+	const tour = await Tour.findByIdAndDelete(req.params.id)
+
+	if (!tour) return next(new AppError('No tour found with that ID', 404))
 
 	// Inace 204 znaci no content, a to je jer smo ga obrisal
 	res.status(204).json({

@@ -10,11 +10,11 @@
             "colId": "90e82cf4-8465-431e-a50f-0672adbc7b38",
             "containerId": "",
             "name": "Get All Tours",
-            "url": "{{DOMAIN}}:{{PORT}}/api/tours",
+            "url": "{{DOMAIN}}:{{PORT}}/api/v1/tours",
             "method": "GET",
             "sortNum": 10000,
             "created": "2023-06-20T13:51:51.428Z",
-            "modified": "2023-07-03T19:45:53.586Z",
+            "modified": "2023-07-04T15:47:26.257Z",
             "headers": [],
             "params": [
                 {
@@ -62,11 +62,11 @@
             "colId": "90e82cf4-8465-431e-a50f-0672adbc7b38",
             "containerId": "",
             "name": "Get Tour By ID",
-            "url": "{{DOMAIN}}:{{PORT}}/api/v1/tours/6499c8c7e",
+            "url": "{{DOMAIN}}:{{PORT}}/api/v1/tours/64a2ef919cef67d28a42f3cf0",
             "method": "GET",
             "sortNum": 30000,
             "created": "2023-06-20T14:32:31.058Z",
-            "modified": "2023-07-04T12:18:48.854Z",
+            "modified": "2023-07-04T15:57:36.180Z",
             "headers": [],
             "params": [],
             "tests": []
