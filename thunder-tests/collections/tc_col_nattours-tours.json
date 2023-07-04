@@ -47,12 +47,12 @@
             "method": "POST",
             "sortNum": 20000,
             "created": "2023-06-20T13:52:01.436Z",
-            "modified": "2023-07-03T15:54:07.919Z",
+            "modified": "2023-07-04T12:07:29.163Z",
             "headers": [],
             "params": [],
             "body": {
                 "type": "json",
-                "raw": "{\n    \"name\": \"Super Secret Tour\",\n    \"duration\": 1,\n    \"maxGroupSize\": 1,\n    \"difficulty\": \"difficult\",\n    \"ratingsAverage\": 4.5,\n    \"ratingsQuantity\": 0,\n    \"secretTour\": true,\n    \"price\": 1,\n    \"summary\": \"Test Tour\",\n    \"imageCover\": \"tour-3-cover.jpg\",\n    \"images\": [\n      \"tour-3-1.jpg\",\n      \"tour-3-2.jpg\",\n      \"tour-3-3.jpg\"\n    ],\n    \"startDates\": [\n      \"2022-01-05T09:00:00.000Z\",\n      \"2022-02-12T09:00:00.000Z\",\n      \"2023-01-06T09:00:00.000Z\"\n    ]\n\t}",
+                "raw": "{\n    \"name\": \"TEST ERROR\",\n    \"maxGroupSize\": 1,\n    \"difficulty\": \"difficult\",\n    \"ratingsAverage\": 4.5,\n    \"ratingsQuantity\": 0,\n    \"secretTour\": true,\n    \"price\": 1,\n    \"summary\": \"Test Tour\",\n    \"imageCover\": \"tour-3-cover.jpg\",\n    \"images\": [\n      \"tour-3-1.jpg\",\n      \"tour-3-2.jpg\",\n      \"tour-3-3.jpg\"\n    ],\n    \"startDates\": [\n      \"2022-01-05T09:00:00.000Z\",\n      \"2022-02-12T09:00:00.000Z\",\n      \"2023-01-06T09:00:00.000Z\"\n    ]\n\t}",
                 "form": []
             },
             "tests": []
@@ -62,11 +62,11 @@
             "colId": "90e82cf4-8465-431e-a50f-0672adbc7b38",
             "containerId": "",
             "name": "Get Tour By ID",
-            "url": "{{DOMAIN}}:{{PORT}}/api/v1/tours/6499c8c7e01319c92765ac9f",
+            "url": "{{DOMAIN}}:{{PORT}}/api/v1/tours/6499c8c7e",
             "method": "GET",
             "sortNum": 30000,
             "created": "2023-06-20T14:32:31.058Z",
-            "modified": "2023-06-27T13:23:45.382Z",
+            "modified": "2023-07-04T12:18:48.854Z",
             "headers": [],
             "params": [],
             "tests": []
