@@ -2,6 +2,15 @@
 const mongoose = require('mongoose')
 const dotenv = require('dotenv')
 
+// ? Catching Uncaught Exceptions - mora pre svega
+process.on('uncaughtException', (err) => {
+	console.log('UNCAUGHT EXCEPTION! 💥 Shutting down...')
+	console.log(err.name, err.message)
+
+	process.exit(1)
+})
+// console.log(x)
+
 dotenv.config({ path: './config.env' }) // path gde se config.env file nalazi. BTW, OVO MORA PRE const app = require('./app'). jer ne mozemo da citamo process.env varijable u app.js ako oni jos nisu konfigurisani, ofc!!
 
 const app = require('./app')
@@ -56,9 +65,9 @@ Konfigurisanje slinta sa prettier-om. Moramo instalirati ove extensions u vsc i 
 
 // !Error - censtralno mesto za handloivanje gresaka van express app
 process.on('unhandledRejection', (err) => {
-	console.log(err.name, err.message)
 	console.log('UNHANDLED REJECTION! 💥 Shutting down...')
-	// process.exit(1)
+	console.log(err.name, err.message)
+	// process.exit(1) // ovim se naglo prekidaju svi procesi i sve, a ne trba tako, treba lagano, prvo server pa onda process.exit(1)
 	server.close(() => {
 		process.exit(1)
 	})
