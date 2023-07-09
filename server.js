@@ -13,6 +13,10 @@ const DB = process.env.DATABASE.replace(
 	'<PASSWORD>',
 	process.env.DATABASE_PASSWORD
 )
+
+/* 
+Moramo da hendlujemo greske i koje su se desile van nase express app (pa ih samim tim errorController.js nece kesirati), tipa ako ne mozemo da se konektujemo sa bazom ili ne mozemo da se logujemo.
+Da bismo simulirali to, idemo u config.env i recimo promenimo password za DATABASE_PASSWORD i samim tim necemo moci da se logujemo na nas Mongoose bazu */
 mongoose.connect(DB).then((conn) => {
 	// mzd za options pored DB staviti [options.autoCreate=false]
 	// console.log(conn.connection)
@@ -37,7 +41,7 @@ i citamo env promenljive sa: dotenv.config({ path: './config.env' })
 const port = process.env.PORT || 3000
 
 // i sada u npm ne pokrecem nodemon app.js vec nodemon server.js, bitno je gde je .listen
-app.listen(port, () => console.log(`Listening on port ${port}`))
+const server = app.listen(port, () => console.log(`Listening on port ${port}`))
 
 /* 
 u package.js promenjeno:
@@ -49,3 +53,13 @@ u package.js promenjeno:
 Konfigurisanje slinta sa prettier-om. Moramo instalirati ove extensions u vsc i takodje u terminalu za ovaj project instalirati:
 
     npm i eslint prettier eslint-config-prettier eslint-plugin-prettier eslint-config-airbnb eslint-plugin-node eslint-plugin-import eslint-plugin-jsx-a11y eslint-plugin-react --save-dev */
+
+// !Error - censtralno mesto za handloivanje gresaka van express app
+process.on('unhandledRejection', (err) => {
+	console.log(err.name, err.message)
+	console.log('UNHANDLED REJECTION! 💥 Shutting down...')
+	// process.exit(1)
+	server.close(() => {
+		process.exit(1)
+	})
+})
