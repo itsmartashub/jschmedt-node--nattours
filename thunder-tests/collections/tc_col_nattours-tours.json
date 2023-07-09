@@ -76,16 +76,16 @@
             "colId": "90e82cf4-8465-431e-a50f-0672adbc7b38",
             "containerId": "",
             "name": "Update Tour By ID",
-            "url": "{{DOMAIN}}:{{PORT}}/api/v1/tours/649b244a094df06d53cb19b6",
+            "url": "{{DOMAIN}}:{{PORT}}/api/v1/tours/64a2ef919cef67d28a42f3cf",
             "method": "PATCH",
             "sortNum": 40000,
             "created": "2023-06-20T14:32:37.076Z",
-            "modified": "2023-07-04T16:33:42.819Z",
+            "modified": "2023-07-09T17:44:56.563Z",
             "headers": [],
             "params": [],
             "body": {
                 "type": "json",
-                "raw": "{\n  \"ratingsAverage\": 6,\n  \"difficulty\": \"stagod\"\n}",
+                "raw": "{\n  \"ratingsAverage\": 6,\n  \"difficulty\": \"stagod\",\n  \"name\": \"Short\"\n}",
                 "form": []
             },
             "tests": []
