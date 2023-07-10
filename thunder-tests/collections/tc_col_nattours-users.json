@@ -102,6 +102,25 @@
             "headers": [],
             "params": [],
             "tests": []
+        },
+        {
+            "_id": "53c3b522-6bfe-4260-a703-e560e0fe2707",
+            "colId": "89bd6b57-628d-498b-8607-4dbb15073b48",
+            "containerId": "",
+            "name": "Signup",
+            "url": "{{DOMAIN}}:{{PORT}}/api/v1/users/signup",
+            "method": "POST",
+            "sortNum": 70000,
+            "created": "2023-07-10T12:57:21.567Z",
+            "modified": "2023-07-10T13:08:44.571Z",
+            "headers": [],
+            "params": [],
+            "body": {
+                "type": "json",
+                "raw": "{\n  \"name\": \"marta\",\n  \"email\": \"itsmarta@dev.com\",\n  \"password\": \"pass123456\",\n  \"passwordConfirm\": \"pass123456\"\n}",
+                "form": []
+            },
+            "tests": []
         }
     ]
 }

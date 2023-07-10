@@ -204,5 +204,19 @@
         "headers": [],
         "params": [],
         "tests": []
+    },
+    {
+        "_id": "c708c71e-2997-4477-a8b3-1638f4894aa9",
+        "colId": "history",
+        "containerId": "",
+        "name": "Signup",
+        "url": "{{DOMAIN}}:{{PORT}}/api/v1/signup",
+        "method": "POST",
+        "sortNum": 0,
+        "created": "2023-07-10T12:56:54.272Z",
+        "modified": "2023-07-10T12:56:54.272Z",
+        "headers": [],
+        "params": [],
+        "tests": []
     }
 ]
