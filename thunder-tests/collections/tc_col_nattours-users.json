@@ -112,12 +112,12 @@
             "method": "POST",
             "sortNum": 70000,
             "created": "2023-07-10T12:57:21.567Z",
-            "modified": "2023-07-11T17:25:31.325Z",
+            "modified": "2023-07-11T18:19:40.284Z",
             "headers": [],
             "params": [],
             "body": {
                 "type": "json",
-                "raw": "{\n  \"name\": \"jonas\",\n  \"email\": \"test@dev.io\",\n  \"password\": \"pass1234\",\n  \"passwordConfirm\": \"pass1234\"\n}",
+                "raw": "{\n  \"name\": \"jonas\",\n  \"email\": \"test-jwtoken@dev.io\",\n  \"password\": \"pass1234\",\n  \"passwordConfirm\": \"pass1234\"\n}",
                 "form": []
             },
             "tests": []
