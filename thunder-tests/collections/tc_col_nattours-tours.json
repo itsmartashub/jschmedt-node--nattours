@@ -14,7 +14,7 @@
             "method": "GET",
             "sortNum": 10000,
             "created": "2023-06-20T13:51:51.428Z",
-            "modified": "2023-07-12T11:30:04.116Z",
+            "modified": "2023-07-12T17:31:25.419Z",
             "headers": [
                 {
                     "name": "test-header",
@@ -23,8 +23,7 @@
                 },
                 {
                     "name": "Authorization",
-                    "value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY0YWRiYmFmZTNkY2NkMTA1Zjk3NjQ4YiIsImlhdCI6MTY4OTE2MTEzNCwiZXhwIjoxNjk2OTM3MTM0fQ.a2YlAM-48N8FgupRLMjR8CrWll7SyoA_pvrCQU_Q26c",
-                    "isDisabled": true
+                    "value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY0YWRiYmFmZTNkY2NkMTA1Zjk3NjQ4YiIsImlhdCI6MTY4OTE4MzA3NiwiZXhwIjoxNjg5MTgzMTAxfQ.KFYLPrA9xh7wirzyrXfjUCqDZ-DRZTRvZ6X84PNH4NM"
                 }
             ],
             "params": [
