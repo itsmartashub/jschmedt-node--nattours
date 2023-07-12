@@ -41,8 +41,8 @@ exports.login = catchAsync(async (req, res, next) => {
 	// ? 2) Check if user exist && password is correct
 	const user = await User.findOne({ email }).select('+password') // posto smo stavili za password u schemi da je false, i u findOne () ga takodje ne pozivamo vec samo email, moramo posebno select() za password kada se logujemo, i obavezno plus (+password) jer ga inlcudujemo
 
-	console.log(user)
-	console.log(await user.correctPassword(password, user.password))
+	// console.log(user)
+	// console.log(await user.correctPassword(password, user.password))
 
 	/* ! Mogli smo ovde posebno da cekiramo user i posebno isCorrect (tj sada await user.correctPassword(password, user.password)) ali tako bismo potencijalnom hakeru dali informacije sta je tacno, a sta nije */
 	if (!user || !(await user.correctPassword(password, user.password))) {
@@ -56,4 +56,37 @@ exports.login = catchAsync(async (req, res, next) => {
 		status: 'success',
 		token,
 	})
+})
+
+exports.protect = catchAsync(async (req, res, next) => {
+	//? 1) Getting token and check of it's there
+
+	let token
+
+	// ako header Authorization postoji i ako vrednost Authorization headera pocinje sa Bearer
+	if (
+		req.headers.authorization &&
+		req.headers.authorization.startsWith('Bearer')
+	) {
+		token = req.headers.authorization.split(' ')[1] // authorization: 'Bearer hjkfhgsdjkfhdsjbfiheuf', [0] je 'Bearer', [1] je 'hjkfhgsdjkfhdsjbfiheuf'
+	}
+
+	console.log(token)
+
+	if (!token) {
+		return next(
+			new AppError(
+				'You are not logged in! Please log in to get access.',
+				401
+			) // kod 401 znaci unauthorized, to znaci da su podaci koje saljemo u req tacni, ali nisu dovoljni za pristup resourcu koji trazimo
+		)
+	}
+
+	//? 2) Token verification
+
+	//? 3) Check if user still exists
+
+	//? 4) Check if user changed password after the token was issued
+
+	next()
 })

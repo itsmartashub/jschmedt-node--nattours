@@ -131,12 +131,12 @@
             "method": "POST",
             "sortNum": 80000,
             "created": "2023-07-11T18:30:32.734Z",
-            "modified": "2023-07-11T20:18:54.122Z",
+            "modified": "2023-07-12T11:25:30.020Z",
             "headers": [],
             "params": [],
             "body": {
                 "type": "json",
-                "raw": "{\n  \"email\": \"test-jwtoken@dev.io\",\n  \"password\": \"pass45612\"\n}",
+                "raw": "{\n  \"email\": \"test-jwtoken@dev.io\",\n  \"password\": \"pass1234\"\n}",
                 "form": []
             },
             "tests": []

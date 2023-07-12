@@ -61,7 +61,7 @@ userSchema.methods.correctPassword = async function (
 	candidatePassword,
 	userPassword
 ) {
-	console.log(candidatePassword, userPassword)
+	// console.log(candidatePassword, userPassword)
 
 	return await bcrypt.compare(candidatePassword, userPassword) // vraca true ili false. Inace bez ove compare() fn ne bismo moglid a poredimo rucno ova dva passworda jer je jedan hashovan (ovaj postojeci u bazi) a drugi nije (ovaj koji je user uneto u input polje prilikom logina). I sad idemo da pozove ovu fn u authController.js
 }

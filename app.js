@@ -28,6 +28,9 @@ app.use(express.static(`${__dirname}/public`)) // kada idemo na http://localhost
 }) */
 app.use((req, res, next) => {
 	req.requestTime = new Date().toISOString()
+
+	console.log(req.headers)
+
 	next() // ne smemo zaboraviti da pozovemo ovu f-ju
 })
 

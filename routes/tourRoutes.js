@@ -1,5 +1,7 @@
 const express = require('express')
 const tourController = require('../controllers/tourController')
+const authController = require('../controllers/authController')
+
 // const {
 // 	getAllTours,
 // 	getTour,
@@ -29,10 +31,14 @@ router.route('/tour-stats').get(tourController.getTourStats)
 router.route('/monthly-plan/:year').get(tourController.getMonthlyPlan)
 
 /*
-Create a checkBody mw - check if the body contains the name and price property, if not return 400 (bad request from he client) status code. Add it to the post handler stack */
+Create a checkBody mw - check if the body contains the name and price property, if not return 400 (bad request from he client) status code. Add it to the post handler stack.
+
+.get(authController.protect, tourController.getAllTours)
+ovo authController.protect se krece prvo, ako korisnik nije authenticated, bice error i onda se sledeci mw (tourController.getAllTours) nece okinuti. I to ce zastiti pristup ovoj ruti od korisnika koji nisu ulogovani */
 router
 	.route('/')
-	.get(tourController.getAllTours)
+	.get(authController.protect, tourController.getAllTours)
+	// .get(tourController.getAllTours)
 	// .post(tourController.checkBody, tourController.createTour)
 	.post(tourController.createTour)
 
