@@ -112,12 +112,12 @@
             "method": "POST",
             "sortNum": 70000,
             "created": "2023-07-10T12:57:21.567Z",
-            "modified": "2023-07-11T18:19:40.284Z",
+            "modified": "2023-07-12T19:36:37.296Z",
             "headers": [],
             "params": [],
             "body": {
                 "type": "json",
-                "raw": "{\n  \"name\": \"jonas\",\n  \"email\": \"test-jwtoken@dev.io\",\n  \"password\": \"pass1234\",\n  \"passwordConfirm\": \"pass1234\"\n}",
+                "raw": "{\n  \"name\": \"token_tester\",\n  \"email\": \"test-token-fresh-user@tester.io\",\n  \"password\": \"pass1234\",\n  \"passwordConfirm\": \"pass1234\",\n  \"passwordChangedAt\": \"2023-07-12\"\n}",
                 "form": []
             },
             "tests": []
@@ -131,12 +131,12 @@
             "method": "POST",
             "sortNum": 80000,
             "created": "2023-07-11T18:30:32.734Z",
-            "modified": "2023-07-12T11:25:30.020Z",
+            "modified": "2023-07-12T19:44:58.354Z",
             "headers": [],
             "params": [],
             "body": {
                 "type": "json",
-                "raw": "{\n  \"email\": \"test-jwtoken@dev.io\",\n  \"password\": \"pass1234\"\n}",
+                "raw": "{\n  \"email\": \"test-token-fresh-user@tester.io\",\n  \"password\": \"pass1234\"\n}",
                 "form": []
             },
             "tests": []

@@ -19,6 +19,7 @@ exports.signup = catchAsync(async (req, res, next) => {
 		email: req.body.email,
 		password: req.body.password,
 		passwordConfirm: req.body.passwordConfirm,
+		passwordChangedAt: req.body.passwordChangedAt,
 	})
 
 	// premesteno gore u fn signToken
@@ -72,7 +73,7 @@ exports.protect = catchAsync(async (req, res, next) => {
 		token = req.headers.authorization.split(' ')[1] // authorization: 'Bearer hjkfhgsdjkfhdsjbfiheuf', [0] je 'Bearer', [1] je 'hjkfhgsdjkfhdsjbfiheuf'
 	}
 
-	console.log(token)
+	// console.log(token)
 
 	if (!token) {
 		return next(
@@ -86,15 +87,43 @@ exports.protect = catchAsync(async (req, res, next) => {
 	//? 2) Token verification
 	const decoded = await promisify(jwt.verify)(token, process.env.JWT_SECRET)
 
-	console.log(decoded) // { id: '64adbbafe3dccd105f97648b', iat: 1689161134, exp: 1696937134 }
+	// console.log(decoded) // { id: '64adbbafe3dccd105f97648b', iat: 1689161134, exp: 1696937134 }
 
-	/* idemo u errorController.js da kreiramo error handle za error akda pokusava da se izmanipulisa token i koristi fejk, tu bude onda error sa name JsonWebTokenError koji ce da se okida samo u productionu, dakle testiracemo sa npm run start:prod
+	/* @ ERROR HANDLING
+	Idemo u errorController.js da kreiramo error handle za error akda pokusava da se izmanipulisa token i koristi fejk, tu bude onda error sa name JsonWebTokenError koji ce da se okida samo u productionu, dakle testiracemo sa npm run start:prod
 	
 	Elem, kada nam istekne token i pokusamo da pristupimo sajtu, takodje ce se pojaviti greska. Ali posto za sad nemamo hendler za nju, bice ona kalsicna greska "something went wrong" koja se desi kada nismo specifirali tacno name errora. A name za istekao token je TokenExpiredError, pa idemo u errorController.js da dodamo i if za nju. Btw simuliracemo istek tokena tako sto idemo u config.env i za JWT_EXPIRES_IN stavimo 5s */
 
 	//? 3) Check if user still exists
+	/* 
+	! Mnogu programeri ce ovde stati, tj nece raditi vise od koraka 1) i 2), ali to nije dovoljno bezbedno. Sta ako recimo korisnik obrise nalog u medjuvremenu, a token ostaje i dalje validan sve dok ne istekne, ali ako korisnik vise ne postoji, ne zelimo da postoji mogucnost da se on uloguje hahaha.
+	! Ili, jos gore, sta ako korisnik promeni password nakon sto je token issued (dodeljen), takodje nece raditi. Zamisli da je neko ukrao token od korisnika, i da bi se korisnik zastitio on menja password, ali token ostaje i dalje validan te taj haker moze i dalje da ga koristi (to cemo u koraku 4) da resavamo). */
+	const currentUser = await User.findById(decoded.id) /// ovo nije novi korisnik, dakle ne newUser, vec je ovo vec kreiran korisnik samo dekodiran, dakle currentUser
 
-	//? 4) Check if user changed password after the token was issued
+	if (!currentUser) {
+		return next(
+			new AppError(
+				'The user belonging to this token no longer exists.',
+				401
+			)
+		)
+	}
+	/* Da testiramo ovo idemo u Signup u Thunder Client da kreiramo novog tester korisnika, kopiramo potom token koji smo dobili i paste u Gel All Tours u Bearer token, i PRE nego sto okinemo rikvest, OBRISAMO u Compassu tok korisnika */
 
+	//? 4) Check if user changed password after the token was issued (dodeljen)
+	// Posto ce ovde biti mnogo koda za verification, idemo u userModel.js da kreiramo userSchema.methods.changedPasswordAfter
+	if (currentUser.changedPasswordAfter(decoded.iat)) {
+		// ako je ovo u if true, to znaci da je user menjao password
+		// iat je valjda issued authorization token
+		return next(
+			new AppError(
+				'User recently changed password! Please log in again.',
+				401
+			)
+		)
+	}
+
+	//? GRANT ACCESS TO PROTECTED ROUTE
+	req.user = currentUser // stavljamo sve podatke o korisniku u req.user
 	next()
 })

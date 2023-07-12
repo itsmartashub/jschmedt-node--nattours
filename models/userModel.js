@@ -35,6 +35,7 @@ const userSchema = new mongoose.Schema({
 			message: 'Passwords are not the same',
 		},
 	},
+	passwordChangedAt: Date, // menjace se kad god korisnik promeni password
 })
 
 /* 
@@ -64,6 +65,33 @@ userSchema.methods.correctPassword = async function (
 	// console.log(candidatePassword, userPassword)
 
 	return await bcrypt.compare(candidatePassword, userPassword) // vraca true ili false. Inace bez ove compare() fn ne bismo moglid a poredimo rucno ova dva passworda jer je jedan hashovan (ovaj postojeci u bazi) a drugi nije (ovaj koji je user uneto u input polje prilikom logina). I sad idemo da pozove ovu fn u authController.js
+}
+
+/* Prosledjujemo JWTTimestamp tj timestamp koji oznacava kad je token issued */
+userSchema.methods.changedPasswordAfter = function (JWTTimestamp) {
+	// u instance metodama this uvek ukazuje na trenutni document
+	if (this.passwordChangedAt) {
+		/* 	idemo gore u Schemu da kreiramo field za vreme kad je password kreiran: passwordChangedAt koji ce se menjati kad god korisnik promeni password
+		ako ovo this.passwordChangedAt ne postoji onda to znaci da korisnik nikad nije menjao password 
+		Za sad cemo rucno da dodamo ovaj property u body prilikom signup rikvesta samo dok istestiramo, pa cemo posle setovati ovaj property kada budemo pisali logiku za menjanje passworda. */
+
+		console.log(this.passwordChangedAt, JWTTimestamp) // 2023-07-12T00:00:00.000Z 1689191106
+
+		// sada hocem oda konvertujemo ovaj this.passwordChangedAt da bude kao ovaj timestamp
+		const changedTimestamp = parseInt(
+			this.passwordChangedAt.getTime() / 1000,
+			10
+		) // da pretvorimo iz ms u s delimo sa 1000, a da bude integer a ne String, stavljamo u parseInt. 10 je baza, tj koliko cifara
+
+		console.log(changedTimestamp, JWTTimestamp) // 1689120000 1689191106
+
+		return JWTTimestamp < changedTimestamp //* primer 100 < 200, a ovo je true, a to je ono sto hocemo da vratimo, jer false znaci NOT CHANGED, a ovo znaci da je CHANGED. A ako je 300 < 200, 300 nije manje od 200, i to je false
+	}
+
+	return false //! ovo znaci da user NIJE promenio svoj password nakon sto je token issued. NOT CHANGED znaci da je vreme kada je token dodeljen (issued) je MANJE od changedTimestamp vremena odn vremena kada se password menjao
+
+	/* 
+	DA bismo simulirali to da je korisnik promenio password te se kreirao novi token, idemo u Compass i za tog korisnika menjamo datum promene passworda mesec vise recimo, i onda kad pokusavamo da se ulogujemo necemo moci. Ako je vreme promenjenog passworda VECE od vremena kad je token issued, korisnik je promenio password nakon sto se token issued, i tada ne zelimo da korisnik ima pristup zasticenim rutama, vec a "teramo" da se ponovo uloguje, te mu se novi token issued, te ce JTWTimestamp da bude manji od vremena kada se password menjao, tj od changedTimestamp, sto znaci da ce biti false, sto znaci da ce userSchema.methods.changedPasswordAfter da vrati false, sto znaci da ce se u authConteoller.js doci do req.user = currentUser i next() dela */
 }
 
 const User = mongoose.model('User', userSchema)
