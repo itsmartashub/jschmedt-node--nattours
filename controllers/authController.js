@@ -124,6 +124,6 @@ exports.protect = catchAsync(async (req, res, next) => {
 	}
 
 	//? GRANT ACCESS TO PROTECTED ROUTE
-	req.user = currentUser // stavljamo sve podatke o korisniku u req.user
+	req.user = currentUser // stavljamo sve podatke o korisniku u req.user gde taj podatak ide dalje drugom middleware-u koji smo stavili. Dakle ako nesto hocemo da bude dostupno sledecem mw-u, samo stavimo taj podatak u request objekat
 	next()
 })
