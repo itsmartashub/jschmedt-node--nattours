@@ -1,6 +1,6 @@
 const mongoose = require('mongoose')
 const validator = require('validator')
-const bcrypt = require('bcryptjs')
+const bcrypt = require('bcrypt')
 
 // name, email, photo, password, passwordConfirm
 const userSchema = new mongoose.Schema({
@@ -21,6 +21,7 @@ const userSchema = new mongoose.Schema({
 		type: String,
 		required: [true, 'Provide a password'],
 		minlength: [8, 'Password must be at least 8 characters'],
+		select: false, //@ jako bitno! Ne treba da dohvatamo password kada se logujemo, sta ce nam na klajentu.
 	},
 	passwordConfirm: {
 		type: String,
@@ -42,8 +43,7 @@ userSchema.pre('save', async function (next) {
 	// ? Only run this fn if password was actuaally modified
 	if (!this.isModified('password')) return next()
 
-	/*
-	this.password je current password u db.
+	/* this.password je current password u db.
 	Ovaj drugi argument u hash() metodul je koliko jaku enkripciju kor, kor smo nekada 8, pa 10, a sad mozemo 12 jer su danas kompovi jaci, veci broj vise CPU-a vuce, ali je i password jaci */
 	// ? Hash the password with cost of 10
 	this.password = await bcrypt.hash(this.password, 12)
@@ -53,6 +53,18 @@ userSchema.pre('save', async function (next) {
 
 	next()
 })
+
+// ? INSTANCE METHOD - je ustv metod koji ce biti dostupan u svim documents u bazi
+/* 
+candidatePassword je password koji je user koristio za login, u userPassword je password koji je vec enkriptovan u bazi. ovde this keyword ukazuje na trenutni document .Ali posto smo gore u schemi sstavil iza password da je select: false, ovo this.password nece biti dostupno u outputu. zato koristimo ovde candidatePassword i userPassword */
+userSchema.methods.correctPassword = async function (
+	candidatePassword,
+	userPassword
+) {
+	console.log(candidatePassword, userPassword)
+
+	return await bcrypt.compare(candidatePassword, userPassword) // vraca true ili false. Inace bez ove compare() fn ne bismo moglid a poredimo rucno ova dva passworda jer je jedan hashovan (ovaj postojeci u bazi) a drugi nije (ovaj koji je user uneto u input polje prilikom logina). I sad idemo da pozove ovu fn u authController.js
+}
 
 const User = mongoose.model('User', userSchema)
 

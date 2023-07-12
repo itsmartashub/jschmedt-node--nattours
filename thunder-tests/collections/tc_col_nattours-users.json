@@ -121,6 +121,25 @@
                 "form": []
             },
             "tests": []
+        },
+        {
+            "_id": "f5410a9f-29a7-4bb1-8588-c12296e882c6",
+            "colId": "89bd6b57-628d-498b-8607-4dbb15073b48",
+            "containerId": "",
+            "name": "Login",
+            "url": "{{DOMAIN}}:{{PORT}}/api/v1/users/login",
+            "method": "POST",
+            "sortNum": 80000,
+            "created": "2023-07-11T18:30:32.734Z",
+            "modified": "2023-07-11T20:18:54.122Z",
+            "headers": [],
+            "params": [],
+            "body": {
+                "type": "json",
+                "raw": "{\n  \"email\": \"test-jwtoken@dev.io\",\n  \"password\": \"pass45612\"\n}",
+                "form": []
+            },
+            "tests": []
         }
     ]
 }
