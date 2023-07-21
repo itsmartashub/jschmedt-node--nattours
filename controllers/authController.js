@@ -1,3 +1,4 @@
+/* eslint-disable arrow-body-style */
 const { promisify } = require('util') // node built-in for promisify method
 const jwt = require('jsonwebtoken')
 const User = require('../models/userModel')
@@ -20,6 +21,7 @@ exports.signup = catchAsync(async (req, res, next) => {
 		password: req.body.password,
 		passwordConfirm: req.body.passwordConfirm,
 		passwordChangedAt: req.body.passwordChangedAt,
+		role: req.body.role,
 	})
 
 	// premesteno gore u fn signToken
@@ -127,3 +129,25 @@ exports.protect = catchAsync(async (req, res, next) => {
 	req.user = currentUser // stavljamo sve podatke o korisniku u req.user gde taj podatak ide dalje drugom middleware-u koji smo stavili. Dakle ako nesto hocemo da bude dostupno sledecem mw-u, samo stavimo taj podatak u request objekat
 	next()
 })
+
+exports.restrictTo = (...roles) => {
+	// ne mozemo proslediti argumente u mw. Ali u ovom slucaju su nam oni potrebni, te kako to uciniti? Sa ...roles
+	return (req, res, next) => {
+		// roles is array ['admin', 'lead-guide'] npr
+
+		console.log(req.user.role)
+		console.log(roles.includes(req.user.role))
+
+		//! Jako bitna linija koda !
+		if (!roles.includes(req.user.role)) {
+			return next(
+				new AppError(
+					'You do not have permission to perform this action',
+					403
+				)
+			)
+		}
+
+		next()
+	}
+}

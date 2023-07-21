@@ -47,7 +47,11 @@ router
 	.route('/:id')
 	.get(tourController.getTour)
 	.patch(tourController.updateTour)
-	.delete(tourController.deleteTour)
+	.delete(
+		authController.protect, // cekiramo da li je korisnik ulogovan
+		authController.restrictTo('admin', 'lead-guide'), //? Authorization. Samo Autentifikacija nije dovoljna. Dakle idemo da autorizujemo samo odredjene korisnike za odredjene akcije (recimo admine. Autorizacija je verifikacija da li odredjeni korisnik ima privilegije za odredjene akcije iako je vec ulogovan). Idemo u userModel.js u Schemu da kreiramo role. Samo admin i lead-guide mogu da obrisu tour
+		tourController.deleteTour
+	)
 
 // ovako exportujemo kad je samo jedna stvar u pitanju
 module.exports = router

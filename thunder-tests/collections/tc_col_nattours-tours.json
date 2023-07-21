@@ -56,12 +56,12 @@
             "method": "POST",
             "sortNum": 20000,
             "created": "2023-06-20T13:52:01.436Z",
-            "modified": "2023-07-21T10:46:35.871Z",
+            "modified": "2023-07-21T14:18:19.150Z",
             "headers": [],
             "params": [],
             "body": {
                 "type": "json",
-                "raw": "{\n    \"name\": \"The Forest Hiker\",\n    \"duration\": 1,\n    \"maxGroupSize\": 1,\n    \"difficulty\": \"easy\",\n    \"price\": 200,\n    \"summary\": \"Test Tour\",\n    \"imageCover\": \"tour-3-cover.jpg\",\n    \"ratingsAverage\": 4\n}",
+                "raw": "{\n    \"name\": \"TESTING_TESTING\",\n    \"duration\": 1,\n    \"maxGroupSize\": 1,\n    \"difficulty\": \"easy\",\n    \"price\": 200,\n    \"summary\": \"Test Tour\",\n    \"imageCover\": \"tour-3-cover.jpg\",\n    \"ratingsAverage\": 4\n}",
                 "form": []
             },
             "tests": []
@@ -104,13 +104,17 @@
             "colId": "90e82cf4-8465-431e-a50f-0672adbc7b38",
             "containerId": "",
             "name": "Delete Tour by ID",
-            "url": "{{URL}}/api/v1/tours/649b14edbef1352de0cda28f.",
+            "url": "{{URL}}/api/v1/tours/64ba93e83fd1b916bfd6c788",
             "method": "DELETE",
             "sortNum": 50000,
             "created": "2023-06-20T16:25:58.937Z",
-            "modified": "2023-07-21T10:46:53.500Z",
+            "modified": "2023-07-21T14:23:35.959Z",
             "headers": [],
             "params": [],
+            "auth": {
+                "type": "bearer",
+                "bearer": "{{jwt}}"
+            },
             "tests": []
         },
         {
