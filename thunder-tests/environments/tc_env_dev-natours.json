@@ -1,0 +1,18 @@
+{
+    "_id": "25ed0e10-dcad-450b-940a-955354af9b0c",
+    "name": "DEV: Natours",
+    "default": true,
+    "sortNum": 20000,
+    "created": "2023-06-27T12:02:21.084Z",
+    "modified": "2023-06-27T12:02:21.084Z",
+    "data": [
+        {
+            "name": "URL",
+            "value": "http://127.0.0.1:8000"
+        },
+        {
+            "name": "jwt",
+            "value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY0YmE2YTk0NmY3OWJiOGNjNzIxMjM0NSIsImlhdCI6MTY4OTkzODU4MCwiZXhwIjoxNjk3NzE0NTgwfQ.CkVJmbZ9DEj39ahh7IZWiFrOqR9UtQ5rnuG4IaMN5RM"
+        }
+    ]
+}

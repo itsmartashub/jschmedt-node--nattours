@@ -10,20 +10,15 @@
             "colId": "90e82cf4-8465-431e-a50f-0672adbc7b38",
             "containerId": "",
             "name": "Get All Tours",
-            "url": "{{DOMAIN}}:{{PORT}}/api/v1/tours",
+            "url": "{{URL}}/api/v1/tours",
             "method": "GET",
             "sortNum": 10000,
             "created": "2023-06-20T13:51:51.428Z",
-            "modified": "2023-07-12T20:07:28.121Z",
+            "modified": "2023-07-21T11:25:12.587Z",
             "headers": [
                 {
                     "name": "test-header",
-                    "value": "jonas",
-                    "isDisabled": true
-                },
-                {
-                    "name": "Authorization",
-                    "value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY0YWYwMjAzZTE0NWNhN2IxYTg4ZWYxYSIsImlhdCI6MTY4OTE5MjQyNCwiZXhwIjoxNjk2OTY4NDI0fQ.kF-RWJYVxlh0raYFP72ACueec8JpQ3FlLsZuSfNQqd8"
+                    "value": "jonas"
                 }
             ],
             "params": [
@@ -46,6 +41,10 @@
                     "isPath": false
                 }
             ],
+            "auth": {
+                "type": "bearer",
+                "bearer": "{{jwt}}"
+            },
             "tests": []
         },
         {
@@ -53,11 +52,11 @@
             "colId": "90e82cf4-8465-431e-a50f-0672adbc7b38",
             "containerId": "",
             "name": "Create New Tour",
-            "url": "{{DOMAIN}}:{{PORT}}/api/v1/tours",
+            "url": "{{URL}}/api/v1/tours",
             "method": "POST",
             "sortNum": 20000,
             "created": "2023-06-20T13:52:01.436Z",
-            "modified": "2023-07-04T18:26:03.422Z",
+            "modified": "2023-07-21T10:46:35.871Z",
             "headers": [],
             "params": [],
             "body": {
@@ -72,11 +71,11 @@
             "colId": "90e82cf4-8465-431e-a50f-0672adbc7b38",
             "containerId": "",
             "name": "Get Tour By ID",
-            "url": "{{DOMAIN}}:{{PORT}}/api/v1/tours/wwwwwwwww",
+            "url": "{{URL}}/api/v1/tours/wwwwwwwww",
             "method": "GET",
             "sortNum": 30000,
             "created": "2023-06-20T14:32:31.058Z",
-            "modified": "2023-07-04T16:22:54.268Z",
+            "modified": "2023-07-21T10:46:42.033Z",
             "headers": [],
             "params": [],
             "tests": []
@@ -86,11 +85,11 @@
             "colId": "90e82cf4-8465-431e-a50f-0672adbc7b38",
             "containerId": "",
             "name": "Update Tour By ID",
-            "url": "{{DOMAIN}}:{{PORT}}/api/v1/tours/64a2ef919cef67d28a42f3cf",
+            "url": "{{URL}}/api/v1/tours/64a2ef919cef67d28a42f3cf",
             "method": "PATCH",
             "sortNum": 40000,
             "created": "2023-06-20T14:32:37.076Z",
-            "modified": "2023-07-09T17:44:56.563Z",
+            "modified": "2023-07-21T10:46:48.573Z",
             "headers": [],
             "params": [],
             "body": {
@@ -105,11 +104,11 @@
             "colId": "90e82cf4-8465-431e-a50f-0672adbc7b38",
             "containerId": "",
             "name": "Delete Tour by ID",
-            "url": "{{DOMAIN}}:{{PORT}}/api/v1/tours/649b14edbef1352de0cda28f.",
+            "url": "{{URL}}/api/v1/tours/649b14edbef1352de0cda28f.",
             "method": "DELETE",
             "sortNum": 50000,
             "created": "2023-06-20T16:25:58.937Z",
-            "modified": "2023-06-27T16:58:30.615Z",
+            "modified": "2023-07-21T10:46:53.500Z",
             "headers": [],
             "params": [],
             "tests": []
@@ -119,11 +118,11 @@
             "colId": "90e82cf4-8465-431e-a50f-0672adbc7b38",
             "containerId": "",
             "name": "Get Top 5 Cheap Tours",
-            "url": "{{DOMAIN}}:{{PORT}}/api/v1/tours/top-5-cheap",
+            "url": "{{URL}}/api/v1/tours/top-5-cheap",
             "method": "GET",
             "sortNum": 60000,
             "created": "2023-06-29T12:28:52.876Z",
-            "modified": "2023-06-29T12:28:58.036Z",
+            "modified": "2023-07-21T10:46:58.578Z",
             "headers": [],
             "params": [],
             "tests": []
@@ -133,11 +132,11 @@
             "colId": "90e82cf4-8465-431e-a50f-0672adbc7b38",
             "containerId": "",
             "name": "Get Tour Stats",
-            "url": "{{DOMAIN}}:{{PORT}}/api/v1/tours/tour-stats",
+            "url": "{{URL}}/api/v1/tours/tour-stats",
             "method": "GET",
             "sortNum": 70000,
             "created": "2023-07-01T11:29:31.322Z",
-            "modified": "2023-07-01T11:30:26.487Z",
+            "modified": "2023-07-21T10:47:04.270Z",
             "headers": [],
             "params": [],
             "tests": []
@@ -147,11 +146,11 @@
             "colId": "90e82cf4-8465-431e-a50f-0672adbc7b38",
             "containerId": "",
             "name": "Get Monthly Plan By YEar",
-            "url": "{{DOMAIN}}:{{PORT}}/api/v1/tours/monthly-plan/2021",
+            "url": "{{URL}}/api/v1/tours/monthly-plan/2021",
             "method": "GET",
             "sortNum": 80000,
             "created": "2023-07-01T12:47:27.160Z",
-            "modified": "2023-07-01T12:49:20.004Z",
+            "modified": "2023-07-21T10:47:08.506Z",
             "headers": [],
             "params": [],
             "tests": []
