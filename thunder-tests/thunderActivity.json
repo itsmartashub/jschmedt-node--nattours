@@ -232,5 +232,19 @@
         "headers": [],
         "params": [],
         "tests": []
+    },
+    {
+        "_id": "7582a243-6306-4961-a686-5e73d2bccc7f",
+        "colId": "history",
+        "containerId": "",
+        "name": "Reset Password",
+        "url": "{{URL}}/api/v1/users/resetPassword/43243",
+        "method": "PATCH",
+        "sortNum": 0,
+        "created": "2023-07-22T13:31:42.684Z",
+        "modified": "2023-07-22T13:32:44.372Z",
+        "headers": [],
+        "params": [],
+        "tests": []
     }
 ]

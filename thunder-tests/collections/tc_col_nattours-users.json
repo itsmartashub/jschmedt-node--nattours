@@ -173,6 +173,20 @@
                 "form": []
             },
             "tests": []
+        },
+        {
+            "_id": "0c7f020a-7566-4647-8a0c-45537b62c53d",
+            "colId": "89bd6b57-628d-498b-8607-4dbb15073b48",
+            "containerId": "",
+            "name": "Reset Password",
+            "url": "{{URL}}/api/v1/users/resetPassword/43243",
+            "method": "PATCH",
+            "sortNum": 100000,
+            "created": "2023-07-22T13:32:04.631Z",
+            "modified": "2023-07-22T13:32:37.628Z",
+            "headers": [],
+            "params": [],
+            "tests": []
         }
     ]
 }

@@ -8,7 +8,7 @@ router.post('/signup', authController.signup)
 router.post('/login', authController.login)
 
 router.post('/forgotPassword', authController.forgotPassword) // forgotPassword prima samo email
-router.post('/resetPassword', authController.resetPassword) // resetPassword prima token i novi password
+router.patch('/resetPassword/:token', authController.resetPassword) // resetPassword prima token i novi password
 
 router
 	.route('/')
