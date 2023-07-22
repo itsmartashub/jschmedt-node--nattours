@@ -10,6 +10,12 @@ router.post('/login', authController.login)
 router.post('/forgotPassword', authController.forgotPassword) // forgotPassword prima samo email
 router.patch('/resetPassword/:token', authController.resetPassword) // resetPassword prima token i novi password
 
+router.patch(
+	'/updateMyPassword',
+	authController.protect,
+	authController.updatePassword
+)
+
 router
 	.route('/')
 	.get(userController.getAllUsers)

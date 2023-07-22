@@ -14,6 +14,12 @@ const signToken = (id) => {
 	})
 }
 
+const createSendToken = (user, statusCode, res) => {
+	const token = signToken(user._id)
+
+	res.status(statusCode).json({ status: 'success', token, data: { user } })
+}
+
 exports.signup = catchAsync(async (req, res, next) => {
 	// const newUser = await User.create(req.body) //! BIG SECURITY FLOW, nikako ovako ne sme da se kreira korisnik
 
@@ -31,9 +37,10 @@ exports.signup = catchAsync(async (req, res, next) => {
 	// 	expiresIn: process.env.JWT_EXPIRES_IN,
 	// })
 
-	const token = signToken(newUser._id)
+	createSendToken(newUser, 201, res) // ovo je umesto ovog dole koda, i sad svugde gre kor to menjamo sa ovom fn
 
-	res.status(201).json({ status: 'success', token, data: { user: newUser } })
+	/* const token = signToken(newUser._id)
+	res.status(201).json({ status: 'success', token, data: { user: newUser } })*/
 })
 
 exports.login = catchAsync(async (req, res, next) => {
@@ -56,12 +63,14 @@ exports.login = catchAsync(async (req, res, next) => {
 	}
 
 	// ? 3) If everything ok, send token to client
+	createSendToken(user, 200, res)
+	/*
 	const token = signToken(user._id)
-
 	res.status(200).json({
 		status: 'success',
 		token,
 	})
+	*/
 })
 
 exports.protect = catchAsync(async (req, res, next) => {
@@ -232,7 +241,33 @@ exports.resetPassword = catchAsync(async (req, res, next) => {
 	//? 3) Update changedPasswordAt property for the user
 
 	//? 4) Log the user in, send JWT to client
-	const token = signToken(user._id)
+	createSendToken(user, 200, res)
 
-	res.status(200).json({ status: 'success', token })
+	/* const token = signToken(user._id)
+	res.status(200).json({ status: 'success', token }) */
+})
+
+exports.updatePassword = catchAsync(async (req, res, next) => {
+	// iz bezbednosnih razloga moramo pitati korisnika za password iako je vec ulogovan, jer sta ako je ostabvio komp i neko zlonameran sedne za komp i promeni password
+	// ? 1) Get user from collection
+	const user = await User.findById(req.user.id).select('+password') // req.user.id dolazi iz protect mw-a
+
+	// ? 2) Check if POSTed current password is correct
+	if (
+		!(await user.correctPassword(req.body.passwordCurrent, user.password))
+	) {
+		return next(new AppError('Your current password is wrong', 401))
+	}
+
+	// ? 3) If so, update
+	user.password = req.body.password
+	user.passwordConfirm = req.body.passwordConfirm
+	await user.save()
+
+	/* ! Apdejtujemo password sa await.user.save(), a ne sa User.findByIdAndUpdate jer to nece raditi kako treba. Iz dva razloga, jedan je da validator u passwordConfirm Schemi nece raditi jer this.password nije definisan kada koristimo findByIdAndUpdate, jer u pozadini Mongoose ne cuva trenutni objekat u memoriji.
+	! A potom nece raditi ni ona dva userSchema.pre('save', function (next)....) */
+	// User.findByIdAndUpdate // Will NOT work as intented!
+
+	// ? 4) Log user in, send JWT to client
+	createSendToken(user, 200, res)
 })

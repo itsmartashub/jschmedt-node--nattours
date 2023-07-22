@@ -246,5 +246,24 @@
         "headers": [],
         "params": [],
         "tests": []
+    },
+    {
+        "_id": "28446b52-dbd3-4102-97db-2e72bdc4644d",
+        "colId": "history",
+        "containerId": "",
+        "name": "Update Current User Password",
+        "url": "{{URL}}/api/v1/users/updateMyPassword",
+        "method": "PATCH",
+        "sortNum": 0,
+        "created": "2023-07-22T20:56:04.574Z",
+        "modified": "2023-07-22T20:57:31.010Z",
+        "headers": [],
+        "params": [],
+        "body": {
+            "type": "json",
+            "raw": "{\n  \"passwordCurrent\": \"\",\n  \"password\": \"\",\n  \"passwordConfirm\": \"\"\n}",
+            "form": []
+        },
+        "tests": []
     }
 ]

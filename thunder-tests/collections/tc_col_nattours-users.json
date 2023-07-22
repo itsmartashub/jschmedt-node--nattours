@@ -138,7 +138,7 @@
             "method": "POST",
             "sortNum": 80000,
             "created": "2023-07-11T18:30:32.734Z",
-            "modified": "2023-07-21T14:23:05.003Z",
+            "modified": "2023-07-22T21:28:50.924Z",
             "headers": [],
             "params": [],
             "body": {
@@ -190,6 +190,36 @@
                 "type": "json",
                 "raw": "{\n  \"password\": \"novipass123\",\n  \"passwordConfirm\": \"novipass123\"\n}",
                 "form": []
+            },
+            "tests": [
+                {
+                    "type": "set-env-var",
+                    "custom": "json.token",
+                    "action": "setto",
+                    "value": "{{jwt}}"
+                }
+            ]
+        },
+        {
+            "_id": "1d5b914e-7070-4742-829e-21726970ad38",
+            "colId": "89bd6b57-628d-498b-8607-4dbb15073b48",
+            "containerId": "",
+            "name": "Update Current User Password",
+            "url": "{{URL}}/api/v1/users/updateMyPassword",
+            "method": "PATCH",
+            "sortNum": 110000,
+            "created": "2023-07-22T21:02:49.878Z",
+            "modified": "2023-07-22T21:29:43.642Z",
+            "headers": [],
+            "params": [],
+            "body": {
+                "type": "json",
+                "raw": "{\n  \"passwordCurrent\": \"pass1234\",\n  \"password\": \"novipassword\",\n  \"passwordConfirm\": \"novipassword\"\n}",
+                "form": []
+            },
+            "auth": {
+                "type": "bearer",
+                "bearer": "{{jwt}}"
             },
             "tests": [
                 {
