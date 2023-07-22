@@ -218,5 +218,19 @@
         "headers": [],
         "params": [],
         "tests": []
+    },
+    {
+        "_id": "4994fdc9-90d7-466d-b3d4-28380ca31ab9",
+        "colId": "history",
+        "containerId": "",
+        "name": "Forgot Password",
+        "url": "{{URL}}/api/v1/users/forgotPassword",
+        "method": "POST",
+        "sortNum": 0,
+        "created": "2023-07-22T10:49:48.546Z",
+        "modified": "2023-07-22T10:49:48.546Z",
+        "headers": [],
+        "params": [],
+        "tests": []
     }
 ]

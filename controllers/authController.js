@@ -151,3 +151,23 @@ exports.restrictTo = (...roles) => {
 		next()
 	}
 }
+
+exports.forgotPassword = catchAsync(async (req, res, next) => {
+	// 1. Get user based on POSTed email
+	const user = await User.findOne({ email: req.body.email })
+
+	if (!user) {
+		return next(
+			new AppError('There is no user with that email address', 404)
+		)
+	}
+
+	// 2. Generate the random reset token
+	// Idemo u userModel.js da ispisemo ovaj kod jer ce biti previse za ovde
+	const resetToken = user.createPasswordResetToken()
+
+	await user.save({ validateBeforeSave: false }) // { validateBeforeSave: false } - ovo ce da deaktivira sve validatore koje smo napravili u nasoj schemi
+
+	// 3. Send it to user's email
+})
+exports.resetPassword = catchAsync(async (req, res, next) => {})

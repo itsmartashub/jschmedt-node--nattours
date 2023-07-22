@@ -1,3 +1,4 @@
+const crypto = require('crypto') // built-in node module
 const mongoose = require('mongoose')
 const validator = require('validator')
 const bcrypt = require('bcrypt')
@@ -41,6 +42,8 @@ const userSchema = new mongoose.Schema({
 		},
 	},
 	passwordChangedAt: Date, // menjace se kad god korisnik promeni password
+	passwordResetToken: String,
+	passwordResetExpires: Date,
 })
 
 /* 
@@ -97,6 +100,22 @@ userSchema.methods.changedPasswordAfter = function (JWTTimestamp) {
 
 	/* 
 	DA bismo simulirali to da je korisnik promenio password te se kreirao novi token, idemo u Compass i za tog korisnika menjamo datum promene passworda mesec vise recimo, i onda kad pokusavamo da se ulogujemo necemo moci. Ako je vreme promenjenog passworda VECE od vremena kad je token issued, korisnik je promenio password nakon sto se token issued, i tada ne zelimo da korisnik ima pristup zasticenim rutama, vec a "teramo" da se ponovo uloguje, te mu se novi token issued, te ce JTWTimestamp da bude manji od vremena kada se password menjao, tj od changedTimestamp, sto znaci da ce biti false, sto znaci da ce userSchema.methods.changedPasswordAfter da vrati false, sto znaci da ce se u authConteoller.js doci do req.user = currentUser i next() dela */
+}
+
+userSchema.methods.createPasswordResetToken = function () {
+	const resetToken = crypto.randomBytes(32).toString('hex')
+
+	/* Moramo da kriptujemo token koji ce korisnik dobiti da bi resetovao password. Kriptujemo jer sta ako neki haker probije u db, pa bude video text based token. Medjutim, ovo nije password te ne moramo da ga snazno kriptujemo kao password. Btw, moramo gore u Schemi da definisemo polje za passwordResetToken i za passwordResetExpires, jer on ofc istekne nakon nekog odredjenog vremena, i potom ovde mozemo da koristimo this.passwordResetToken i this.passwordResetExpires */
+	this.passwordResetToken = crypto
+		.createHash('sha256')
+		.update(resetToken)
+		.digest('hex')
+
+	console.log({ resetToken }, this.passwordResetToken)
+
+	this.passwordResetExpires = Date.now() + 10 * 60 * 1000 // hocemo da cekamo 10min
+
+	return resetToken // vracamo prvobitno kreirani resetToken a ne kriptovani, jer korisnik ofc treba da primi token kakav jeste a ne kriptovan, jer koja je poenta onda enkripcije
 }
 
 const User = mongoose.model('User', userSchema)
