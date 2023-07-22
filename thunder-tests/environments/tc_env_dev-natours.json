@@ -1,19 +1,19 @@
 {
-	"_id": "25ed0e10-dcad-450b-940a-955354af9b0c",
-	"name": "DEV: Natours",
-	"default": true,
-	"sortNum": 20000,
-	"created": "2023-06-27T12:02:21.084Z",
-	"modified": "2023-06-27T12:02:21.084Z",
-	"data": [
-		{
-			"name": "URL",
-			"value": "http://127.0.0.1:8000"
-		},
-		{
-			"name": "jwt",
-			"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY0YmE4ZGFhMjQwMGZmYzU4MjAwNmQ2NCIsImlhdCI6MTY4OTk0OTM4NCwiZXhwIjoxNjk3NzI1Mzg0fQ.DP93UJXYRNit3JwDD4ViMJAQIMfOso1qnTXetJr8i3w",
-			"secret": true
-		}
-	]
+    "_id": "25ed0e10-dcad-450b-940a-955354af9b0c",
+    "name": "DEV: Natours",
+    "default": true,
+    "sortNum": 20000,
+    "created": "2023-06-27T12:02:21.084Z",
+    "modified": "2023-06-27T12:02:21.084Z",
+    "data": [
+        {
+            "name": "URL",
+            "value": "http://127.0.0.1:8000"
+        },
+        {
+            "name": "jwt",
+            "value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY0YmE4Njk2ODU2NWU4NzQ5YTI2MzVlNiIsImlhdCI6MTY5MDAzOTkwNiwiZXhwIjoxNjk3ODE1OTA2fQ.D1bCwX-JQLmaoOzi4438Xl_B1ywnGvmaqNRbQ5lTN8c",
+            "secret": true
+        }
+    ]
 }

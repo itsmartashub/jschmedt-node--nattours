@@ -179,14 +179,26 @@
             "colId": "89bd6b57-628d-498b-8607-4dbb15073b48",
             "containerId": "",
             "name": "Reset Password",
-            "url": "{{URL}}/api/v1/users/resetPassword/43243",
+            "url": "{{URL}}/api/v1/users/resetPassword/f28a2257aa990466bf206c1efb7527fea695c52a9f83d5e461aa5b97ed92e7ba",
             "method": "PATCH",
             "sortNum": 100000,
             "created": "2023-07-22T13:32:04.631Z",
-            "modified": "2023-07-22T13:32:37.628Z",
+            "modified": "2023-07-22T15:31:41.252Z",
             "headers": [],
             "params": [],
-            "tests": []
+            "body": {
+                "type": "json",
+                "raw": "{\n  \"password\": \"novipass123\",\n  \"passwordConfirm\": \"novipass123\"\n}",
+                "form": []
+            },
+            "tests": [
+                {
+                    "type": "set-env-var",
+                    "custom": "json.token",
+                    "action": "setto",
+                    "value": "{{jwt}}"
+                }
+            ]
         }
     ]
 }

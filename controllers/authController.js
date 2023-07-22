@@ -1,4 +1,5 @@
 /* eslint-disable arrow-body-style */
+const crypto = require('crypto')
 const { promisify } = require('util') // node built-in for promisify method
 const jwt = require('jsonwebtoken')
 const User = require('../models/userModel')
@@ -154,7 +155,7 @@ exports.restrictTo = (...roles) => {
 }
 
 exports.forgotPassword = catchAsync(async (req, res, next) => {
-	// 1. Get user based on POSTed email
+	//? 1. Get user based on POSTed email
 	const user = await User.findOne({ email: req.body.email })
 
 	if (!user) {
@@ -163,13 +164,13 @@ exports.forgotPassword = catchAsync(async (req, res, next) => {
 		)
 	}
 
-	// 2. Generate the random reset token
+	//? 2. Generate the random reset token
 	// Idemo u userModel.js da ispisemo ovaj kod jer ce biti previse za ovde
 	const resetToken = user.createPasswordResetToken()
 
 	await user.save({ validateBeforeSave: false }) // { validateBeforeSave: false } - ovo ce da deaktivira sve validatore koje smo napravili u nasoj schemi
 
-	// 3. Send it to user's email (utils/email.js)
+	//? 3. Send it to user's email (utils/email.js)
 	const resetURL = `${req.protocol}://${req.get(
 		'host'
 	)}/api/v1/users/resetPassword/${resetToken}` // i ovde saljemo original token a ne enkriptovan
@@ -203,4 +204,35 @@ exports.forgotPassword = catchAsync(async (req, res, next) => {
 	}
 })
 
-exports.resetPassword = catchAsync(async (req, res, next) => {})
+exports.resetPassword = catchAsync(async (req, res, next) => {
+	//? 1) Get user based on the token
+	// Eknriptovacemo token da bismo gaa uporedili sa vec enkriptovanim ukoji je u bazi, ovo je sada mng lakse nego sa password enkripcijom jer je ovde enkripcija manja/slabija
+	const hashedToken = crypto
+		.createHash('sha256')
+		.update(req.params.token)
+		.digest('hex')
+
+	const user = await User.findOne({
+		passwordResetToken: hashedToken,
+		passwordResetExpires: { $gt: Date.now() }, // cekiramo da li je token expires vece od (greater then iliti $gt u mongodb) sada, to znaci da je jos validan tj da nije istekao
+	})
+
+	//? 2) If token has not expired, and there is user, set the new password
+	if (!user) {
+		return next(new AppError('Token is invalid or has expired', 400))
+	}
+
+	user.password = req.body.password
+	user.passwordConfirm = req.body.passwordConfirm
+	user.passwordResetToken = undefined // resetujemo
+	user.passwordResetExpires = undefined // resetujemo
+
+	await user.save() // sada zelimo validatore (dakle ne stavljamo { validateBeforeSave: false } u save()), da proverimo da li je password isti sa passwordConfirm
+
+	//? 3) Update changedPasswordAt property for the user
+
+	//? 4) Log the user in, send JWT to client
+	const token = signToken(user._id)
+
+	res.status(200).json({ status: 'success', token })
+})

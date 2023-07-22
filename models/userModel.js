@@ -63,6 +63,14 @@ userSchema.pre('save', async function (next) {
 	next()
 })
 
+userSchema.pre('save', function (next) {
+	if (!this.isModified('password') || this.isNew) return next()
+
+	this.passwordChangedAt = Date.now() - 1000 // oduzimamo jednu sekundu jer je cuvanje u db sporije od issuinga novog jwt tokena. To moze da uzrokuje to da timestamp od passwordChangedAt se setuje NAKON sto se jwt token kreira sto ce uciniti to da korisnik nece moci da se uloguje koristeci novi token. Jer setimo se da je razlog sto passwordChangedAt postoji da bismo ga mogli uporediti sa timestampom na jtw tokenu (JWTTimestamp) (controllers/authController.js u loginu ono 2) Check if user exist && password is correct)
+
+	next()
+})
+
 // ? INSTANCE METHOD - je ustv metod koji ce biti dostupan u svim documents u bazi
 /* 
 candidatePassword je password koji je user koristio za login, u userPassword je password koji je vec enkriptovan u bazi. ovde this keyword ukazuje na trenutni document .Ali posto smo gore u schemi sstavil iza password da je select: false, ovo this.password nece biti dostupno u outputu. zato koristimo ovde candidatePassword i userPassword */
@@ -111,7 +119,7 @@ userSchema.methods.createPasswordResetToken = function () {
 		.update(resetToken)
 		.digest('hex')
 
-	// console.log({ resetToken }, this.passwordResetToken)
+	console.log({ resetToken }, '\n', this.passwordResetToken)
 
 	this.passwordResetExpires = Date.now() + 10 * 60 * 1000 // hocemo da cekamo 10min
 
