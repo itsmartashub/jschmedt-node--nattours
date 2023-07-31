@@ -2,6 +2,8 @@ const express = require('express')
 const morgan = require('morgan') // 3rdParty middleware
 const rateLimit = require('express-rate-limit')
 const helmet = require('helmet')
+const mongoSanitize = require('express-mongo-sanitize')
+const xss = require('xss-clean')
 
 const AppError = require('./utils/appError')
 const globalErrorHandler = require('./controllers/errorController')
@@ -46,6 +48,38 @@ Elem, posto hocemo da vidimo da l inmasa err message radi, stavljamo max: 3, pa 
 //? BODY PARSER, READING DATA FROM body INTO req.body
 app.use(express.json({ limit: '10kb' })) // middleware je u sustini f-ja koja moze da modifikuje podatke koji nam stizu na server, dakle stoji in the middle of the req i res. Ako ovo zakomentarisemo body je undefined, odn nemamo ga vise
 // ovaj limit: '10kb' znaci da limitramo body na 10kb, i ako je on veci, necem biti prihvacen
+
+//? DATA SANATIZATION AGAINST NoSQL QUERY INJECTION
+/*
+@ KOLIKO JE LAKO ODRADITI NoSQL QUERY INJECTION ako recimo znamo password ali ne i email
+
+Idemo u recimo login request, i za body json stavimo:
+
+``` {
+```		"email": { "$qt": "" },
+```		"password": "pwd_koji_znamo"
+``` }
+
+I ovo radi jer ce { "$qt": "" } uvek biti true. I recimo idemo u Compass MOngo DB, odemo u nasy users db, i u filter input napisemo query: {"email": { "$qt": "" }} i vidimo da vraca sve korisnike jer je to uvek true.
+Idemo da instaliramo: npm i express-mongo-sanitize
+I takodje instaliramo: npm i xss
+*/
+app.use(mongoSanitize()) // ovaj mw gleda req.body, req.query string i req.params i filtrira sve $ i tacke (dollar sings i dots), jer su tako mongo db operatori pisani
+
+//? DATA SANATIZATION AGAINST XSS
+app.use(xss()) // cisti bilo koji input od zlonamernog HTML koda
+/* 
+	Recimo ako se signupujemo sa body jsonom:
+```		{
+```			"name": "<div id='bad-code'>Name</div>",
+```			"email": "xss_tester@test.io",
+```			"password": "pass1234",
+```			"passwordConfirm": "pass1234"
+```		}
+
+sa ukljucenim xss mw, signupovace se ali ali sa name-om:
+```		 "name": "&lt;div id='bad-code'>Name&lt;/div>"
+*/
 
 //? SERVING STATIC FILES
 app.use(express.static(`${__dirname}/public`)) // kada idemo na http://localhost:3000/overview.html recimo, otvorice se taj html file, dakle ne http://localhost:3000/public/overview.html vec bez public, jer public je jednako root folder.
