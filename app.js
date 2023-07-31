@@ -1,6 +1,7 @@
 const express = require('express')
 const morgan = require('morgan') // 3rdParty middleware
 const rateLimit = require('express-rate-limit')
+const helmet = require('helmet')
 
 const AppError = require('./utils/appError')
 const globalErrorHandler = require('./controllers/errorController')
@@ -12,18 +13,23 @@ const app = express()
 /* ///////////////////////////////////////////
 	@ 1) GLOBAL MIDDLEWARES
 /////////////////////////////////////////// */
+//? SET SECURITY HTTP HEADERS
+app.use(helmet()) // bitno je da je stavljen pre ostalih mw ili medju prvima
+
+//? DEVELOPMENT LOGGING
 if (process.env.NODE_ENV === 'development') {
 	app.use(morgan('dev')) //``` GET /api/v1/tours 200 8.129 ms - 8656
 	// app.use(morgan('tiny')) //``` GET /api/v1/tours 200 8656 - 7.153 ms (ovo 200 nije obojeno i drugi redosled)
 }
 
+//? LIMIT REQUESTS FROM SAME IP
 // ovaj limiter je bejzikli middleware fn
 const limiter = rateLimit({
 	/* How many requests per ip we will allowed per hour
 	100 rikvestova sa iste IP adrese u jednom satu.
 	! Naravno, vrlo je bitno da se nadje balans u zavisnosti od aplikacije koju pravimo. Ako recimo pravimo neki API, naravno zelimo da dozvolimo vise od 100 requestova per IP */
-	// max: 100,
-	max: 3,
+	// max: 3,
+	max: 100,
 	windowMs: 60 * 60 * 1000, // 1 hour
 	message: 'Too many requests from this IP, please try again in an hour!',
 })
@@ -37,11 +43,15 @@ Odnosno koliko ukupno imamo req (100), i koliko nam je preostalo (99) i timestam
 Inace, ako restartujemo app, namerno nili ako app crashuje, resetovace se i rateLimit, tj bice ponovo 100, a ne koliko je preostalo.
 Elem, posto hocemo da vidimo da l inmasa err message radi, stavljamo max: 3, pa cemo da istrosimo ova 3 requesta i da vidimo message error. I dobijamo nasu poruku i kod 429 Too Many Requests koja je by rateLimit */
 
-app.use(express.json()) // middleware je u sustini f-ja koja moze da modifikuje podatke koji nam stizu na server, dakle stoji in the middle of the req i res. Ako ovo zakomentarisemo body je undefined, odn nemamo ga vise
+//? BODY PARSER, READING DATA FROM body INTO req.body
+app.use(express.json({ limit: '10kb' })) // middleware je u sustini f-ja koja moze da modifikuje podatke koji nam stizu na server, dakle stoji in the middle of the req i res. Ako ovo zakomentarisemo body je undefined, odn nemamo ga vise
+// ovaj limit: '10kb' znaci da limitramo body na 10kb, i ako je on veci, necem biti prihvacen
 
+//? SERVING STATIC FILES
 app.use(express.static(`${__dirname}/public`)) // kada idemo na http://localhost:3000/overview.html recimo, otvorice se taj html file, dakle ne http://localhost:3000/public/overview.html vec bez public, jer public je jednako root folder.
 // takodje, kada ukucamo recimo u browseru u url http://localhost:3000/img/pin.png i otvorice se ta slika, ali NE MOZEMO http://localhost:3000/img/ jer to nije file, to izgleda kao regularna route, a express dakle pokusava da nadje route handler za /img/ sto ne moze jer nismo nista definisali. Dakle ovo radi samo za STATIC FILES
 
+//? TEST MIDDLEWARE
 /* app.use((req, res, next) => {
 	// sva ova tri parametra mozemo zapravo ovde nazvati kako hocemo, ali drzimo se konvencija. Ovaj middleware se odnosi na svaku route
 	console.log('Hello from the middleware 👋')
