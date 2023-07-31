@@ -1,5 +1,6 @@
 const express = require('express')
 const morgan = require('morgan') // 3rdParty middleware
+const rateLimit = require('express-rate-limit')
 
 const AppError = require('./utils/appError')
 const globalErrorHandler = require('./controllers/errorController')
@@ -9,12 +10,32 @@ const userRouter = require('./routes/userRoutes')
 const app = express()
 
 /* ///////////////////////////////////////////
-	@ 1) MIDDLEWARES
+	@ 1) GLOBAL MIDDLEWARES
 /////////////////////////////////////////// */
 if (process.env.NODE_ENV === 'development') {
 	app.use(morgan('dev')) //``` GET /api/v1/tours 200 8.129 ms - 8656
 	// app.use(morgan('tiny')) //``` GET /api/v1/tours 200 8656 - 7.153 ms (ovo 200 nije obojeno i drugi redosled)
 }
+
+// ovaj limiter je bejzikli middleware fn
+const limiter = rateLimit({
+	/* How many requests per ip we will allowed per hour
+	100 rikvestova sa iste IP adrese u jednom satu.
+	! Naravno, vrlo je bitno da se nadje balans u zavisnosti od aplikacije koju pravimo. Ako recimo pravimo neki API, naravno zelimo da dozvolimo vise od 100 requestova per IP */
+	// max: 100,
+	max: 3,
+	windowMs: 60 * 60 * 1000, // 1 hour
+	message: 'Too many requests from this IP, please try again in an hour!',
+})
+// app.use(limiter)
+app.use('/api', limiter) // limit access to our /api route, dkale limitirace se sve rute koje pocinju sa /api
+/* i sada recimo idemo da okinemo request /api/v1/tours i vidimo u Headers:
+```	x-ratelimit-limit: 100
+```	x-ratelimit-remaining: 99
+``` x-ratelimit-reset: 1690839320
+Odnosno koliko ukupno imamo req (100), i koliko nam je preostalo (99) i timestamp kad se resetovao 1690839320, onaj 1h windowMs sto smo naveli.
+Inace, ako restartujemo app, namerno nili ako app crashuje, resetovace se i rateLimit, tj bice ponovo 100, a ne koliko je preostalo.
+Elem, posto hocemo da vidimo da l inmasa err message radi, stavljamo max: 3, pa cemo da istrosimo ova 3 requesta i da vidimo message error. I dobijamo nasu poruku i kod 429 Too Many Requests koja je by rateLimit */
 
 app.use(express.json()) // middleware je u sustini f-ja koja moze da modifikuje podatke koji nam stizu na server, dakle stoji in the middle of the req i res. Ako ovo zakomentarisemo body je undefined, odn nemamo ga vise
 
