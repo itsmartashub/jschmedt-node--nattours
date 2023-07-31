@@ -125,6 +125,24 @@
                 "bearer": "{{jwt}}"
             },
             "tests": []
+        },
+        {
+            "_id": "7f1c6217-b3b3-42fb-a97c-691aa7dd29c3",
+            "colId": "89bd6b57-628d-498b-8607-4dbb15073b48",
+            "containerId": "",
+            "name": "Delete Current User",
+            "url": "{{URL}}/api/v1/users/deleteMe",
+            "method": "DELETE",
+            "sortNum": 130000,
+            "created": "2023-07-31T19:14:54.424Z",
+            "modified": "2023-07-31T19:14:54.424Z",
+            "headers": [],
+            "params": [],
+            "auth": {
+                "type": "bearer",
+                "bearer": "{{jwt}}"
+            },
+            "tests": []
         }
     ]
 }

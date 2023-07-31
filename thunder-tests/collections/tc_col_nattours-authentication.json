@@ -40,12 +40,12 @@
             "method": "POST",
             "sortNum": 20000,
             "created": "2023-07-31T14:51:21.477Z",
-            "modified": "2023-07-31T18:31:46.484Z",
+            "modified": "2023-07-31T19:38:15.653Z",
             "headers": [],
             "params": [],
             "body": {
                 "type": "json",
-                "raw": "{\n  \"name\": \"TTTTT\",\n  \"email\": \"test@testtest.com\",\n  \"password\": \"pass1234\",\n  \"passwordConfirm\": \"pass1234\"\n}",
+                "raw": "{\n  \"name\": \"Cookie Tester\",\n  \"email\": \"cookie_tester@test.io\",\n  \"password\": \"pass1234\",\n  \"passwordConfirm\": \"pass1234\",\n  \"role\": \"guide\"\n}",
                 "form": []
             },
             "tests": [

@@ -17,6 +17,21 @@ const signToken = (id) => {
 const createSendToken = (user, statusCode, res) => {
 	const token = signToken(user._id)
 
+	const cookieOptions = {
+		expires: new Date(
+			Date.now() + process.env.JWT_COOKIE_EXPIRES_IN * 24 * 60 * 60 * 1000 // sa * 24 * 60 * 60 * 1000 konvertujemo JWT_COOKIE_EXPIRES_IN sto je u danima, u milisekunde
+		),
+		// secure: true, //! cookie ce biti poslat samo ako koristimo https protokol, a ne http. Medjutim mi sad u devu ne koristimo https, vec http. Dakle ovo zelimo da aktiviramo samo kada smo u prodaction-u. Pa cemo citav object sa expires property da sacuvamo u promenljivoj. I onda cemo da upitamo sa if da li smo u productionu, ako jesmo, dodajemo ovaj property secure, da bude true
+		httpOnly: true, // ! ovo omogucava da se kukiju ne moze prisupiti niti editovani putem browsera. Receive cookie, store it, and then send it all automatically alone w/ every request
+	}
+
+	if (process.env.NODE_ENV === 'production') cookieOptions.secure = true
+
+	res.cookie('jwt', token, cookieOptions)
+
+	// Remove the password from the output
+	user.password = undefined // necemo da nam se vrati password. Ovo se vraca kreirajuci document, zato ga vidimo.
+
 	res.status(statusCode).json({ status: 'success', token, data: { user } })
 }
 
