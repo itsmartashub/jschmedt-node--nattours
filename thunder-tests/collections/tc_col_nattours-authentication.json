@@ -1,0 +1,136 @@
+{
+    "_id": "7b6dc07d-73c9-4dac-a53f-f1102d188062",
+    "colName": "Nattours - Authentication",
+    "created": "2023-07-31T14:50:49.579Z",
+    "sortNum": 30000,
+    "folders": [],
+    "requests": [
+        {
+            "_id": "f5410a9f-29a7-4bb1-8588-c12296e882c6",
+            "colId": "7b6dc07d-73c9-4dac-a53f-f1102d188062",
+            "containerId": "",
+            "name": "Login",
+            "url": "{{URL}}/api/v1/users/login",
+            "method": "POST",
+            "sortNum": 10000,
+            "created": "2023-07-31T14:51:19.339Z",
+            "modified": "2023-07-31T14:51:19.339Z",
+            "headers": [],
+            "params": [],
+            "body": {
+                "type": "json",
+                "raw": "{\n  \"email\": \"admin@jonas.io\",\n  \"password\": \"pass1234\"\n}",
+                "form": []
+            },
+            "tests": [
+                {
+                    "type": "set-env-var",
+                    "custom": "json.token",
+                    "action": "setto",
+                    "value": "{{jwt}}"
+                }
+            ]
+        },
+        {
+            "_id": "53c3b522-6bfe-4260-a703-e560e0fe2707",
+            "colId": "7b6dc07d-73c9-4dac-a53f-f1102d188062",
+            "containerId": "",
+            "name": "Signup",
+            "url": "{{URL}}/api/v1/users/signup",
+            "method": "POST",
+            "sortNum": 20000,
+            "created": "2023-07-31T14:51:21.477Z",
+            "modified": "2023-07-31T14:52:51.696Z",
+            "headers": [],
+            "params": [],
+            "body": {
+                "type": "json",
+                "raw": "{\n  \"name\": \"T\",\n  \"email\": \"test@testtt.com\",\n  \"password\": \"pass1234\",\n  \"passwordConfirm\": \"pass1234\"\n}",
+                "form": []
+            },
+            "tests": [
+                {
+                    "type": "set-env-var",
+                    "custom": "json.token",
+                    "action": "setto",
+                    "value": "{{jwt}}"
+                }
+            ]
+        },
+        {
+            "_id": "0c7f020a-7566-4647-8a0c-45537b62c53d",
+            "colId": "7b6dc07d-73c9-4dac-a53f-f1102d188062",
+            "containerId": "",
+            "name": "Reset Password",
+            "url": "{{URL}}/api/v1/users/resetPassword/f28a2257aa990466bf206c1efb7527fea695c52a9f83d5e461aa5b97ed92e7ba",
+            "method": "PATCH",
+            "sortNum": 30000,
+            "created": "2023-07-31T14:51:23.391Z",
+            "modified": "2023-07-31T14:51:23.391Z",
+            "headers": [],
+            "params": [],
+            "body": {
+                "type": "json",
+                "raw": "{\n  \"password\": \"novipass123\",\n  \"passwordConfirm\": \"novipass123\"\n}",
+                "form": []
+            },
+            "tests": [
+                {
+                    "type": "set-env-var",
+                    "custom": "json.token",
+                    "action": "setto",
+                    "value": "{{jwt}}"
+                }
+            ]
+        },
+        {
+            "_id": "fd70d831-84d2-4fa6-80da-fedcaeb03361",
+            "colId": "7b6dc07d-73c9-4dac-a53f-f1102d188062",
+            "containerId": "",
+            "name": "Forgot Password",
+            "url": "{{URL}}/api/v1/users/forgotPassword",
+            "method": "POST",
+            "sortNum": 40000,
+            "created": "2023-07-31T14:51:25.526Z",
+            "modified": "2023-07-31T14:51:25.526Z",
+            "headers": [],
+            "params": [],
+            "body": {
+                "type": "json",
+                "raw": "{\n  \"email\": \"hello@jonas.io\"\n}",
+                "form": []
+            },
+            "tests": []
+        },
+        {
+            "_id": "1d5b914e-7070-4742-829e-21726970ad38",
+            "colId": "7b6dc07d-73c9-4dac-a53f-f1102d188062",
+            "containerId": "",
+            "name": "Update Current User Password",
+            "url": "{{URL}}/api/v1/users/updateMyPassword",
+            "method": "PATCH",
+            "sortNum": 50000,
+            "created": "2023-07-31T14:51:28.029Z",
+            "modified": "2023-07-31T14:51:28.029Z",
+            "headers": [],
+            "params": [],
+            "body": {
+                "type": "json",
+                "raw": "{\n  \"passwordCurrent\": \"pass1234\",\n  \"password\": \"novipassword\",\n  \"passwordConfirm\": \"novipassword\"\n}",
+                "form": []
+            },
+            "auth": {
+                "type": "bearer",
+                "bearer": "{{jwt}}"
+            },
+            "tests": [
+                {
+                    "type": "set-env-var",
+                    "custom": "json.token",
+                    "action": "setto",
+                    "value": "{{jwt}}"
+                }
+            ]
+        }
+    ]
+}

@@ -265,5 +265,28 @@
             "form": []
         },
         "tests": []
+    },
+    {
+        "_id": "62048eb3-eee8-4d2d-b39f-2eb95ba1d86b",
+        "colId": "history",
+        "containerId": "",
+        "name": "Update Current User Data",
+        "url": "{{URL}}/api/v1/users/updateMe",
+        "method": "PATCH",
+        "sortNum": 0,
+        "created": "2023-07-31T14:48:33.053Z",
+        "modified": "2023-07-31T14:49:21.993Z",
+        "headers": [],
+        "params": [],
+        "body": {
+            "type": "json",
+            "raw": "{\n  \"password\": \"pass1234\",\n  \"name\": \"Jonas Schmedtmann\"\n}",
+            "form": []
+        },
+        "auth": {
+            "type": "bearer",
+            "bearer": "{{jwt}}"
+        },
+        "tests": []
     }
 ]
