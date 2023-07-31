@@ -12,7 +12,7 @@
         },
         {
             "name": "jwt",
-            "value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY0YzgyNTBjYjc0OWUxMDNkYmU4ODY1MiIsImlhdCI6MTY5MDgzODI4NCwiZXhwIjoxNjk4NjE0Mjg0fQ.r5aSoA7qMciKsP0KnjcjCebZ0UtYe_tgeCdbJ67XGDs",
+            "value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY0YmE4ZGFhMjQwMGZmYzU4MjAwNmQ2NCIsImlhdCI6MTY5MDgzODY5OSwiZXhwIjoxNjk4NjE0Njk5fQ.oT5cTZeeB2SVy9qQEZDNf6LmGsQ6Qrc0CvtU_n5ejd0",
             "secret": true
         }
     ]

@@ -4,6 +4,7 @@ const rateLimit = require('express-rate-limit')
 const helmet = require('helmet')
 const mongoSanitize = require('express-mongo-sanitize')
 const xss = require('xss-clean')
+const hpp = require('hpp') // http parameters pollution
 
 const AppError = require('./utils/appError')
 const globalErrorHandler = require('./controllers/errorController')
@@ -80,6 +81,23 @@ app.use(xss()) // cisti bilo koji input od zlonamernog HTML koda
 sa ukljucenim xss mw, signupovace se ali ali sa name-om:
 ```		 "name": "&lt;div id='bad-code'>Name&lt;/div>"
 */
+
+//? PREVENT PARAMETER POLLUTION - i on treba da je na kraju jer clearup-uje query string
+/* 
+pogledaj utils/apiFeatures.js u sort() fn gde opisujem zasto hpp - dva ista parametar field-a u requestu itd
+recimo pogledaj req /api/v1/tours?duration=5&duration=9 sa aktivnim hpp() bez whitelista - dohvata 2 toursa, i kad ga zakomentarisemo, ili stavimo whitelist - dohvata 4 toursa */
+app.use(
+	hpp({
+		whitelist: [
+			'duration',
+			'ratingsQuantity',
+			'ratingsAverage',
+			'maxGroupSize',
+			'difficulty',
+			'price',
+		], // whitelist je niz propertija cije duplikovanje dozvoljavamo u req.query stringu
+	})
+)
 
 //? SERVING STATIC FILES
 app.use(express.static(`${__dirname}/public`)) // kada idemo na http://localhost:3000/overview.html recimo, otvorice se taj html file, dakle ne http://localhost:3000/public/overview.html vec bez public, jer public je jednako root folder.

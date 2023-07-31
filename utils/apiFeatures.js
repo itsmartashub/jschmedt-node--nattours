@@ -42,10 +42,17 @@ class APIFeatures {
 	}
 
 	sort() {
-		/* ``` /api/v1/tours?sort=price   - ascending order
+		/*
+		``` /api/v1/tours?sort=price   - ascending order
 		``` /api/v1/tours?sort=-price  - descending order */
+		// ako ovaj sort property postoji to znaci da zelimo da sortiramo
 		if (this.queryString.sort) {
-			// ako ovaj sort property postoji to znaci da zelimo da sortiramo
+			console.log(this.queryString.sort)
+			/* vraca se niz [ 'duration', 'price' ] kada je request sa 2 sorta recimo:
+			``` /api/v1/tours?sort=duration&sort=price
+			a split() koji koristimo dole ne radi sa nizovima vec stringovima. Zato cemo koristiti MW koji ce da ukloni duplirane fields sa:
+			``` npm i hpp
+			sto znaci http parameter pollution */
 
 			/* sort('price ratingsAverage')  - mongoose
 			``` /api/v1/tours?sort=-price,ratingsAverage

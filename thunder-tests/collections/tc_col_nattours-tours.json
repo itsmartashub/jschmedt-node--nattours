@@ -14,7 +14,7 @@
             "method": "GET",
             "sortNum": 10000,
             "created": "2023-06-20T13:51:51.428Z",
-            "modified": "2023-07-21T11:25:12.587Z",
+            "modified": "2023-07-31T21:26:23.555Z",
             "headers": [
                 {
                     "name": "test-header",
@@ -25,12 +25,6 @@
                 {
                     "name": "page",
                     "value": "2",
-                    "isDisabled": true,
-                    "isPath": false
-                },
-                {
-                    "name": "sort",
-                    "value": "1",
                     "isDisabled": true,
                     "isPath": false
                 },
@@ -157,6 +151,98 @@
             "modified": "2023-07-21T10:47:08.506Z",
             "headers": [],
             "params": [],
+            "tests": []
+        },
+        {
+            "_id": "e705d906-7895-48fd-a602-b9b3b01167f3",
+            "colId": "90e82cf4-8465-431e-a50f-0672adbc7b38",
+            "containerId": "",
+            "name": "Get All Tours - Parametar Pollution (duration)",
+            "url": "{{URL}}/api/v1/tours?duration=5&duration=9",
+            "method": "GET",
+            "sortNum": 15000,
+            "created": "2023-07-31T21:25:59.403Z",
+            "modified": "2023-07-31T21:37:14.233Z",
+            "headers": [
+                {
+                    "name": "test-header",
+                    "value": "jonas"
+                }
+            ],
+            "params": [
+                {
+                    "name": "page",
+                    "value": "2",
+                    "isDisabled": true,
+                    "isPath": false
+                },
+                {
+                    "name": "duration",
+                    "value": "5",
+                    "isPath": false
+                },
+                {
+                    "name": "limit",
+                    "value": "10",
+                    "isDisabled": true,
+                    "isPath": false
+                },
+                {
+                    "name": "duration",
+                    "value": "9",
+                    "isPath": false
+                }
+            ],
+            "auth": {
+                "type": "bearer",
+                "bearer": "{{jwt}}"
+            },
+            "tests": []
+        },
+        {
+            "_id": "0faaa1c0-c618-440c-9ae9-e3cb998e6022",
+            "colId": "90e82cf4-8465-431e-a50f-0672adbc7b38",
+            "containerId": "",
+            "name": "Get All Tours - Parametar Pollution (sort)",
+            "url": "{{URL}}/api/v1/tours?sort=duration&sort=price",
+            "method": "GET",
+            "sortNum": 17500,
+            "created": "2023-07-31T21:42:02.693Z",
+            "modified": "2023-07-31T21:42:44.805Z",
+            "headers": [
+                {
+                    "name": "test-header",
+                    "value": "jonas"
+                }
+            ],
+            "params": [
+                {
+                    "name": "page",
+                    "value": "2",
+                    "isDisabled": true,
+                    "isPath": false
+                },
+                {
+                    "name": "sort",
+                    "value": "duration",
+                    "isPath": false
+                },
+                {
+                    "name": "limit",
+                    "value": "10",
+                    "isDisabled": true,
+                    "isPath": false
+                },
+                {
+                    "name": "sort",
+                    "value": "price",
+                    "isPath": false
+                }
+            ],
+            "auth": {
+                "type": "bearer",
+                "bearer": "{{jwt}}"
+            },
             "tests": []
         }
     ]
