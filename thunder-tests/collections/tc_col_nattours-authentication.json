@@ -40,12 +40,12 @@
             "method": "POST",
             "sortNum": 20000,
             "created": "2023-07-31T14:51:21.477Z",
-            "modified": "2023-07-31T14:52:51.696Z",
+            "modified": "2023-07-31T18:31:46.484Z",
             "headers": [],
             "params": [],
             "body": {
                 "type": "json",
-                "raw": "{\n  \"name\": \"T\",\n  \"email\": \"test@testtt.com\",\n  \"password\": \"pass1234\",\n  \"passwordConfirm\": \"pass1234\"\n}",
+                "raw": "{\n  \"name\": \"TTTTT\",\n  \"email\": \"test@testtest.com\",\n  \"password\": \"pass1234\",\n  \"passwordConfirm\": \"pass1234\"\n}",
                 "form": []
             },
             "tests": [

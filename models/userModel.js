@@ -44,6 +44,11 @@ const userSchema = new mongoose.Schema({
 	passwordChangedAt: Date, // menjace se kad god korisnik promeni password
 	passwordResetToken: String,
 	passwordResetExpires: Date,
+	active: {
+		type: Boolean,
+		default: true,
+		select: false, // ne zelimo ovo da prikazujemo u output
+	},
 })
 
 /* 
@@ -68,6 +73,13 @@ userSchema.pre('save', function (next) {
 
 	this.passwordChangedAt = Date.now() - 1000 // oduzimamo jednu sekundu jer je cuvanje u db sporije od issuinga novog jwt tokena. To moze da uzrokuje to da timestamp od passwordChangedAt se setuje NAKON sto se jwt token kreira sto ce uciniti to da korisnik nece moci da se uloguje koristeci novi token. Jer setimo se da je razlog sto passwordChangedAt postoji da bismo ga mogli uporediti sa timestampom na jtw tokenu (JWTTimestamp) (controllers/authController.js u loginu ono 2) Check if user exist && password is correct)
 
+	next()
+})
+
+/* korisnici koji imaju property active: false, necemo prikazivati/dohvatati getAllUsers requestom. Sa ^find trazimo string koji pocinje sa "find". Dohvatamo sve korisnike gde active nije jednako false */
+userSchema.pre(/^find/, function (next) {
+	// this points to the current query
+	this.find({ active: { $ne: false } }) // active should not be false. so not equal ($ne) to false
 	next()
 })
 
