@@ -92,6 +92,32 @@ const tourSchema = new mongoose.Schema(
 			type: Boolean,
 			default: false,
 		},
+		startLocation: {
+			// GeoJSON
+			type: {
+				// svaki ovaj ima svoj schemes
+				type: String,
+				default: 'Point',
+				enum: ['Point'],
+				// required: true,
+			},
+			coordinates: [Number], // ocekujemo array of numbers, tipa latitude i longitute
+			address: String,
+			description: String,
+		},
+		locations: [
+			{
+				type: {
+					type: String,
+					default: 'Point',
+					enum: ['Point'], // enum je jednako: cannot be anything but ...
+				},
+				coordinates: [Number],
+				address: String,
+				description: String,
+				day: Number,
+			},
+		],
 	},
 
 	//? SCHEMA OPTIONS
