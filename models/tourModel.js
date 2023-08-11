@@ -1,6 +1,7 @@
 const mongoose = require('mongoose')
 const slugify = require('slugify')
 // const validator = require('validator')
+// const User = require('./userModel')
 
 const tourSchema = new mongoose.Schema(
 	{
@@ -120,8 +121,15 @@ const tourSchema = new mongoose.Schema(
 			},
 		],
 
-		//? Implementing embedding Tour Guides documents into a Tour document
-		guides: Array,
+		//? IMPLEMENTING EMBEDDING Tour Guides documents into a Tour document
+		// guides: Array,
+
+		//! A sad ce Tours i Users imati razlicite entitete u db. Dakle sve sto ce biti sacuvano u Tour documentu jesu IDs korisnika koji su Tour Guide za taj neki specifican Tour - WTF.
+		//! Potom, kada query-ujemo Tour, zelimo da automatski imamo pristup Tour Guides-u, ali ponovo, bez da ono bude sacuvano u samomom Tour dokumentu, a upravo to se zove REFERENCING!!
+		//? IMPLEMENTING REFERENCING
+		guides: [
+			{ type: mongoose.Schema.ObjectId, ref: 'User' }, // ocekujemo da tip svakog elementa u guides arraya biti MongoDB ID
+		],
 	},
 
 	//? SCHEMA OPTIONS
@@ -160,13 +168,14 @@ tourSchema.pre('save', function (next) {
 	next() // i to poziva next mw u stack-u
 })
 
-tourSchema.pre('save', async function (next) {
+// responsive for perform the EMBEDDIGN
+/* tourSchema.pre('save', async function (next) {
 	const guidesPromises = this.guides.map(
 		async (id) => await User.findById(id)
 	)
 	this.guides = await Promise.all(guidesPromises)
 	next()
-})
+}) */
 
 /* // neko zove mw neko zove HOOK
 tourSchema.pre('save', function (next) {
