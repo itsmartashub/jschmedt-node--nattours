@@ -119,6 +119,9 @@ const tourSchema = new mongoose.Schema(
 				day: Number,
 			},
 		],
+
+		//? Implementing embedding Tour Guides documents into a Tour document
+		guides: Array,
 	},
 
 	//? SCHEMA OPTIONS
@@ -157,36 +160,46 @@ tourSchema.pre('save', function (next) {
 	next() // i to poziva next mw u stack-u
 })
 
-// neko zove mw neko zove HOOK
+tourSchema.pre('save', async function (next) {
+	const guidesPromises = this.guides.map(
+		async (id) => await User.findById(id)
+	)
+	this.guides = await Promise.all(guidesPromises)
+	next()
+})
+
+/* // neko zove mw neko zove HOOK
 tourSchema.pre('save', function (next) {
 	// this.find({ secretTour: { $ne: true } })
 	console.log('Will save document...')
 	next()
 })
 
-/* post() mw ima pristup ne samo next-u, vec i documentu koji je upravo sacuvan u db. post() mw fn se izvrsava NAKON STO SU SVE pre() mw f-je izvrsene */
+// post() mw ima pristup ne samo next-u, vec i documentu koji je upravo sacuvan u db. post() mw fn se izvrsava NAKON STO SU SVE pre() mw f-je izvrsene
 tourSchema.post('save', function (doc, next) {
 	console.log(doc)
 	next()
-})
+}) */
 
 const Tour = mongoose.model('Tour', tourSchema) // obicaj je da se koristi uppercase, prvi argument je ime modela, a drugi je shema
 
-// const testTour = new Tour({
-// 	// ovo je testTour document, i on je instanca Tour modela
-// 	name: 'The Park Camper',
-// 	// rating: 4.7,
-// 	price: 997,
-// })
-// // ovde u ovom then() imamo pristup documentu koji smo upravo sacuvali u db
-// testTour
-// 	.save()
-// 	.then((doc) => {
-// 		console.log(doc)
-// 	})
-// 	.catch((err) => {
-// 		console.log('ERROR 💥: ' + err)
-// 	})
+/*
+const testTour = new Tour({
+	// ovo je testTour document, i on je instanca Tour modela
+	name: 'The Park Camper',
+	// rating: 4.7,
+	price: 997,
+})
+// ovde u ovom then() imamo pristup documentu koji smo upravo sacuvali u db
+testTour
+	.save()
+	.then((doc) => {
+		console.log(doc)
+	})
+	.catch((err) => {
+		console.log('ERROR 💥: ' + err)
+	})
+*/
 
 module.exports = Tour
 /* 
