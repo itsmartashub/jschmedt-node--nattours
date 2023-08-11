@@ -17,7 +17,12 @@ mongoose.connect(DB).then(() => {
 
 // READ JSON FILE
 const tours = JSON.parse(
-	fs.readFileSync(`${__dirname}/tours-simple.json`, 'utf-8')
+	/* Promenili smo source za data iz tours-simple.json u tours.json pa u terminalu kucali:
+	```node ./dev-data/data/import-dev-data.js --delete
+	```node ./dev-data/data/import-dev-data.js --import */
+
+	// fs.readFileSync(`${__dirname}/tours-simple.json`, 'utf-8')
+	fs.readFileSync(`${__dirname}/tours.json`, 'utf-8')
 ) // ./ ovo ./ je relativno uvek od toga gde je node app zapoceta (dakle valjda od homde folder), a nama to ne odg, vec treba da dodamo __dirname
 
 // IMPORT DATA INTO DB
@@ -54,7 +59,7 @@ if (process.argv[2] === '--import') {
 console.log(process.argv)
 /* 
 Okada u terminalu pokerenemo komandu:
-    node dev-data/data/import-dev-data.js
+```    node dev-data/data/import-dev-data.js
 
 dobijemo:
     [
@@ -63,7 +68,7 @@ dobijemo:
     ]
 
 a mi hocemo da dodamo --import za import i --delete za delete> dakle sad kucamo:
-    node dev-data/data/import-dev-data.js --import
+```    node dev-data/data/import-dev-data.js --import
 
 i ovo ovde process.argv u konzoli onda vrati:
     [

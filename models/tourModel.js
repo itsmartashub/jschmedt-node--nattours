@@ -1,6 +1,7 @@
 const mongoose = require('mongoose')
 const slugify = require('slugify')
 // const validator = require('validator')
+// const User = require('./userModel')
 
 const tourSchema = new mongoose.Schema(
 	{
@@ -92,6 +93,43 @@ const tourSchema = new mongoose.Schema(
 			type: Boolean,
 			default: false,
 		},
+		startLocation: {
+			// GeoJSON
+			type: {
+				// svaki ovaj ima svoj schemes
+				type: String,
+				default: 'Point', // za start position je vrlo bitno da bude Point
+				enum: ['Point'],
+				// required: true,
+			},
+			coordinates: [Number], // ocekujemo array of numbers, tipa longitute i latitude
+			address: String,
+			description: String,
+		},
+		//! Embeded documents, mora ovaj array u locations! Specifirajuci Niz Objekata, ovo ce rekreirati brand new document unutar parent documenta sto je u ovom slucaju Tour. locations je niz koji sadrzi objekat za svaku lokaciju (svaki obj ima svoj id)
+		locations: [
+			{
+				type: {
+					type: String,
+					default: 'Point',
+					enum: ['Point'], // enum je jednako: cannot be anything but ... U ovom slucaju Point
+				},
+				coordinates: [Number],
+				address: String,
+				description: String,
+				day: Number,
+			},
+		],
+
+		//? IMPLEMENTING EMBEDDING Tour Guides documents into a Tour document
+		// guides: Array,
+
+		//! A sad ce Tours i Users imati razlicite entitete u db. Dakle sve sto ce biti sacuvano u Tour documentu jesu IDs korisnika koji su Tour Guide za taj neki specifican Tour - WTF.
+		//! Potom, kada query-ujemo Tour, zelimo da automatski imamo pristup Tour Guides-u, ali ponovo, bez da ono bude sacuvano u samomom Tour dokumentu, a upravo to se zove REFERENCING!!
+		//? IMPLEMENTING REFERENCING
+		guides: [
+			{ type: mongoose.Schema.ObjectId, ref: 'User' }, // ocekujemo da tip svakog elementa u guides arraya biti MongoDB ID
+		],
 	},
 
 	//? SCHEMA OPTIONS
@@ -130,36 +168,47 @@ tourSchema.pre('save', function (next) {
 	next() // i to poziva next mw u stack-u
 })
 
-// neko zove mw neko zove HOOK
+// responsive for perform the EMBEDDIGN
+/* tourSchema.pre('save', async function (next) {
+	const guidesPromises = this.guides.map(
+		async (id) => await User.findById(id)
+	)
+	this.guides = await Promise.all(guidesPromises)
+	next()
+}) */
+
+/* // neko zove mw neko zove HOOK
 tourSchema.pre('save', function (next) {
 	// this.find({ secretTour: { $ne: true } })
 	console.log('Will save document...')
 	next()
 })
 
-/* post() mw ima pristup ne samo next-u, vec i documentu koji je upravo sacuvan u db. post() mw fn se izvrsava NAKON STO SU SVE pre() mw f-je izvrsene */
+// post() mw ima pristup ne samo next-u, vec i documentu koji je upravo sacuvan u db. post() mw fn se izvrsava NAKON STO SU SVE pre() mw f-je izvrsene
 tourSchema.post('save', function (doc, next) {
 	console.log(doc)
 	next()
-})
+}) */
 
 const Tour = mongoose.model('Tour', tourSchema) // obicaj je da se koristi uppercase, prvi argument je ime modela, a drugi je shema
 
-// const testTour = new Tour({
-// 	// ovo je testTour document, i on je instanca Tour modela
-// 	name: 'The Park Camper',
-// 	// rating: 4.7,
-// 	price: 997,
-// })
-// // ovde u ovom then() imamo pristup documentu koji smo upravo sacuvali u db
-// testTour
-// 	.save()
-// 	.then((doc) => {
-// 		console.log(doc)
-// 	})
-// 	.catch((err) => {
-// 		console.log('ERROR 💥: ' + err)
-// 	})
+/*
+const testTour = new Tour({
+	// ovo je testTour document, i on je instanca Tour modela
+	name: 'The Park Camper',
+	// rating: 4.7,
+	price: 997,
+})
+// ovde u ovom then() imamo pristup documentu koji smo upravo sacuvali u db
+testTour
+	.save()
+	.then((doc) => {
+		console.log(doc)
+	})
+	.catch((err) => {
+		console.log('ERROR 💥: ' + err)
+	})
+*/
 
 module.exports = Tour
 /* 
