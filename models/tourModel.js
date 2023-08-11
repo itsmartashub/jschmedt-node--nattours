@@ -97,20 +97,21 @@ const tourSchema = new mongoose.Schema(
 			type: {
 				// svaki ovaj ima svoj schemes
 				type: String,
-				default: 'Point',
+				default: 'Point', // za start position je vrlo bitno da bude Point
 				enum: ['Point'],
 				// required: true,
 			},
-			coordinates: [Number], // ocekujemo array of numbers, tipa latitude i longitute
+			coordinates: [Number], // ocekujemo array of numbers, tipa longitute i latitude
 			address: String,
 			description: String,
 		},
+		//! Embeded documents, mora ovaj array u locations! Specifirajuci Niz Objekata, ovo ce rekreirati brand new document unutar parent documenta sto je u ovom slucaju Tour. locations je niz koji sadrzi objekat za svaku lokaciju (svaki obj ima svoj id)
 		locations: [
 			{
 				type: {
 					type: String,
 					default: 'Point',
-					enum: ['Point'], // enum je jednako: cannot be anything but ...
+					enum: ['Point'], // enum je jednako: cannot be anything but ... U ovom slucaju Point
 				},
 				coordinates: [Number],
 				address: String,
