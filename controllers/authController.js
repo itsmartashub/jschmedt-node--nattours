@@ -44,7 +44,7 @@ exports.signup = catchAsync(async (req, res, next) => {
 		password: req.body.password,
 		passwordConfirm: req.body.passwordConfirm,
 		// passwordChangedAt: req.body.passwordChangedAt, // on ovo nema ovde navedeno, a radi mu
-		// role: req.body.role, // on ovo nema ovde navedeno, a radi mu
+		role: req.body.role, // on ovo nema ovde navedeno, a radi mu
 	})
 
 	// premesteno gore u fn signToken

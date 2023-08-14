@@ -219,7 +219,9 @@ exports.getTour = catchAsync(async (req, res, next) => {
 
 	/* 
 	ovo Tour.findById(req.params.id) je isto kao i Tour.findOne({ _id: req.params.id })  */
+	//? Populate process always happend in the query, and not into actual db
 	const tour = await Tour.findById(req.params.id)
+	// const tour = await Tour.findById(req.params.id).populate('guides') //* populate('guides'), guides je ime field-a koje zelimo da populate-ujemo, tj fillupujemo
 
 	if (!tour) return next(new AppError('No tour found with that ID', 404))
 

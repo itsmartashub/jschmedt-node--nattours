@@ -1,7 +1,7 @@
 const mongoose = require('mongoose')
 const slugify = require('slugify')
 // const validator = require('validator')
-// const User = require('./userModel')
+const User = require('./userModel')
 
 const tourSchema = new mongoose.Schema(
 	{
@@ -121,15 +121,16 @@ const tourSchema = new mongoose.Schema(
 			},
 		],
 
-		//? IMPLEMENTING EMBEDDING Tour Guides documents into a Tour document
-		// guides: Array,
+		//? IMPLEMENTING #EMBEDDING Tour Guides documents into a Tour document
+		//! Medjutim, u ovom slucaju nije pametno vrsiti ovo tehnikom embedding jer ako korisnik promeni nesto od podataka, recimo ako apdejtuje email ili role iz guide u lead-guide, svaki x kada bi se ova promena izvrsila onda bi morao da cekiras da li taj Tour ima guide korisnika, i ako ima, onda apdejtuj taj Tour takodje. A to je mnogo posla, i necemo to raditi. Ali je Jonas hteo da pokaze kako embedding radi.
+		guides: Array,
 
 		//! A sad ce Tours i Users imati razlicite entitete u db. Dakle sve sto ce biti sacuvano u Tour documentu jesu IDs korisnika koji su Tour Guide za taj neki specifican Tour - WTF.
 		//! Potom, kada query-ujemo Tour, zelimo da automatski imamo pristup Tour Guides-u, ali ponovo, bez da ono bude sacuvano u samomom Tour dokumentu, a upravo to se zove REFERENCING!!
 		//? IMPLEMENTING REFERENCING
-		guides: [
-			{ type: mongoose.Schema.ObjectId, ref: 'User' }, // ocekujemo da tip svakog elementa u guides arraya biti MongoDB ID
-		],
+		// guides: [
+		// 	{ type: mongoose.Schema.ObjectId, ref: 'User' }, // ocekujemo da tip svakog elementa u guides arraya biti MongoDB ID
+		// ],
 	},
 
 	//? SCHEMA OPTIONS
@@ -168,14 +169,34 @@ tourSchema.pre('save', function (next) {
 	next() // i to poziva next mw u stack-u
 })
 
-// responsive for perform the EMBEDDIGN
-/* tourSchema.pre('save', async function (next) {
+//? IMPLEMENTING #EMBEDDING - responsive for perform the EMBEDDIGN
+tourSchema.pre('save', async function (next) {
 	const guidesPromises = this.guides.map(
 		async (id) => await User.findById(id)
 	)
 	this.guides = await Promise.all(guidesPromises)
 	next()
-}) */
+
+	/* 		
+```		...
+```		"guides": [
+```			{
+```				"_id": "64d69f62d4148c8dbfd1fa18",
+```				"name": "Guidee",
+```				"email": "guide@test.io",
+```				"role": "guide",
+```				"__v": 0
+```			},
+```			{
+```				"_id": "64d69fc8859577ccb505ce49",
+```				"name": "Guidee 2",
+```				"email": "guide_2@test.io",
+```				"role": "guide",
+```				"__v": 0
+```			}
+```		],
+```	  	...*/
+})
 
 /* // neko zove mw neko zove HOOK
 tourSchema.pre('save', function (next) {
@@ -189,6 +210,28 @@ tourSchema.post('save', function (doc, next) {
 	console.log(doc)
 	next()
 }) */
+
+//? QUERY MIDDLEWARE - WTF
+// tourSchema.pre('find', function(next) {
+tourSchema.pre(/^find/, function (next) {
+	this.find({ secretTour: { $ne: true } })
+
+	this.start = Date.now()
+	next()
+})
+
+tourSchema.post(/^find/, function (docs, next) {
+	console.log(`Query took ${Date.now() - this.start} milliseconds!`)
+	next()
+})
+
+//? AGGREGATION MIDDLEWARE - WTF
+tourSchema.pre('aggregate', function (next) {
+	this.pipeline().unshift({ $match: { secretTour: { $ne: true } } })
+
+	console.log(this.pipeline())
+	next()
+})
 
 const Tour = mongoose.model('Tour', tourSchema) // obicaj je da se koristi uppercase, prvi argument je ime modela, a drugi je shema
 
