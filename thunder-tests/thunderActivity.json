@@ -306,5 +306,38 @@
             "bearer": "{{jwt}}"
         },
         "tests": []
+    },
+    {
+        "_id": "f6e05db5-a5bf-4b9f-b6dc-712764f33360",
+        "colId": "history",
+        "containerId": "",
+        "name": "Create Review",
+        "url": "{{URL}}/api/v1/reviews",
+        "method": "POST",
+        "sortNum": 0,
+        "created": "2023-08-14T13:23:43.153Z",
+        "modified": "2023-08-14T13:25:13.184Z",
+        "headers": [],
+        "params": [],
+        "body": {
+            "type": "json",
+            "raw": "{\n  \"reviews\": \"Amazing tourrr\",\n  \"rating\": 5,\n  \"tour\": \"5c88fa8cf4afda39709c295a\",\n  \"user\": \"64ba86968565e8749a2635e6\"\n}",
+            "form": []
+        },
+        "tests": []
+    },
+    {
+        "_id": "7f900b73-bb3c-47da-b1c0-2d0df3c06adc",
+        "colId": "history",
+        "containerId": "",
+        "name": "Get All Reviews",
+        "url": "{{URL}}/api/v1/reviews",
+        "method": "GET",
+        "sortNum": 0,
+        "created": "2023-08-14T13:34:09.986Z",
+        "modified": "2023-08-14T13:34:09.986Z",
+        "headers": [],
+        "params": [],
+        "tests": []
     }
 ]

@@ -10,6 +10,7 @@ const AppError = require('./utils/appError')
 const globalErrorHandler = require('./controllers/errorController')
 const tourRouter = require('./routes/tourRoutes')
 const userRouter = require('./routes/userRoutes')
+const reviewRouter = require('./routes/reviewRoutes')
 
 const app = express()
 
@@ -193,6 +194,7 @@ userRouter.route('/:id').get(getUser).patch(updateUser).delete(deleteUser) */
 // ovo se zove MOUNT of ROUTES. Zapamti da su ovo middlewari za rute, zato mozmeo koristiti app.use(). Dok su oni gore middlewari za citavu app
 app.use('/api/v1/tours', tourRouter)
 app.use('/api/v1/users', userRouter)
+app.use('/api/v1/reviews', reviewRouter)
 
 //? HANDLING UNHANDLED ROUTES MW
 /* svaki naredni mw posle ova dva iznad (tourRouter i userRouter), ako se okine, znaci da ta dva iznad nisu mogla da se hendluju, tj nisu se catchovala. all predtavlja mw za svaki od rikvestova. a * znaci za bilo koju "nepostojecu" rutu.

@@ -1,0 +1,46 @@
+{
+    "_id": "33a869c3-963d-4425-b4a8-398771ea75ad",
+    "colName": "Natours - Reviews",
+    "created": "2023-08-14T13:26:22.615Z",
+    "sortNum": 40000,
+    "folders": [],
+    "requests": [
+        {
+            "_id": "8eeadd3b-b1ff-407f-91f2-75f396912d81",
+            "colId": "33a869c3-963d-4425-b4a8-398771ea75ad",
+            "containerId": "",
+            "name": "Create Review",
+            "url": "{{URL}}/api/v1/reviews",
+            "method": "POST",
+            "sortNum": 10000,
+            "created": "2023-08-14T13:26:22.632Z",
+            "modified": "2023-08-14T13:32:56.513Z",
+            "headers": [],
+            "params": [],
+            "body": {
+                "type": "json",
+                "raw": "{\n  \"review\": \"Isto tester review za ovaj tourrr\",\n  \"rating\": 4,\n  \"tour\": \"5c88fa8cf4afda39709c2961\",\n  \"user\": \"64c816d32d3d11de1156f1ac\"\n}",
+                "form": []
+            },
+            "auth": {
+                "type": "bearer",
+                "bearer": "{{jwt}}"
+            },
+            "tests": []
+        },
+        {
+            "_id": "6f8ceae7-5a60-4fbe-a97f-5816096dbe20",
+            "colId": "33a869c3-963d-4425-b4a8-398771ea75ad",
+            "containerId": "",
+            "name": "Get All Reviews",
+            "url": "{{URL}}/api/v1/reviews",
+            "method": "GET",
+            "sortNum": 20000,
+            "created": "2023-08-14T13:34:31.310Z",
+            "modified": "2023-08-14T13:34:31.311Z",
+            "headers": [],
+            "params": [],
+            "tests": []
+        }
+    ]
+}
