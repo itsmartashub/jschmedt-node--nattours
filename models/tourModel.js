@@ -179,26 +179,26 @@ tourSchema.pre('save', function (next) {
 // 	)
 // 	this.guides = await Promise.all(guidesPromises)
 // 	next()
-
+//
 // 	/*
-// ```		...
-// ```		"guides": [
-// ```			{
-// ```				"_id": "64d69f62d4148c8dbfd1fa18",
-// ```				"name": "Guidee",
-// ```				"email": "guide@test.io",
-// ```				"role": "guide",
-// ```				"__v": 0
-// ```			},
-// ```			{
-// ```				"_id": "64d69fc8859577ccb505ce49",
-// ```				"name": "Guidee 2",
-// ```				"email": "guide_2@test.io",
-// ```				"role": "guide",
-// ```				"__v": 0
-// ```			}
-// ```		],
-// ```	  	...*/
+//		...
+//		"guides": [
+//			{
+//				"_id": "64d69f62d4148c8dbfd1fa18",
+//				"name": "Guidee",
+//				"email": "guide@test.io",
+//				"role": "guide",
+//				"__v": 0
+//			},
+//			{
+//				"_id": "64d69fc8859577ccb505ce49",
+//				"name": "Guidee 2",
+//				"email": "guide_2@test.io",
+//				"role": "guide",
+//				"__v": 0
+//			}
+//		],
+//	  	...*/
 // })
 
 /* // neko zove mw neko zove HOOK
@@ -225,6 +225,18 @@ tourSchema.pre(/^find/, function (next) {
 
 tourSchema.post(/^find/, function (docs, next) {
 	console.log(`Query took ${Date.now() - this.start} milliseconds!`)
+	next()
+})
+
+//? Populate pre mw
+//* ovim object gde su path i select sada populatujemo guides field, ali izuzimamo __v i passwordChangedAt jer nam oni nisu potrebni u guides objectima kada dohvatamo Tour. ALI, premestamo ovo u posbenu fn u models/tourModel.js, jer ce nam trebati jos koji x, pa cemo koristiti ovde kao PRE  MIDDLEWARE
+tourSchema.pre(/^find/, function (next) {
+	//! this point to current query
+	this.populate({
+		path: 'guides',
+		select: '-__v -passwordChangedAt',
+	})
+
 	next()
 })
 

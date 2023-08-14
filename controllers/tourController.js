@@ -221,7 +221,37 @@ exports.getTour = catchAsync(async (req, res, next) => {
 	ovo Tour.findById(req.params.id) je isto kao i Tour.findOne({ _id: req.params.id })  */
 	//? Populate process always happend in the query, and not into actual db
 	const tour = await Tour.findById(req.params.id)
-	// const tour = await Tour.findById(req.params.id).populate('guides') //* populate('guides'), guides je ime field-a koje zelimo da populate-ujemo, tj fillupujemo
+	// const tour = await Tour.findById(req.params.id).populate('guides') //* populate('guides'), guides je ime field-a koje zelimo da populate-ujemo, tj fillupujemo sa pravim podacima. Dakle sa populate replejsujemo polja koja referencujemo sa pravim rilejted podacima, i rezultat toga je da ce podaci izgledati kao da su oduvek embedded, iako su zapravo u totalno drugoj collection, samo izgledaju kao embedded. BTW, populate proces se uvek vrsi u query-u
+	// const tour = await Tour.findById(req.params.id).populate({
+	// 	path: 'guides',
+	// 	select: '-__v -passwordChangedAt',
+	// }) //* ovim object gde su path i select sada populatujemo guides field, ali izuzimamo __v i passwordChangedAt jer nam oni nisu potrebni u guides objectima kada dohvatamo Tour. ALI, premestamo ovo u posbenu fn u models/tourModel.js, jer ce nam trebati jos koji x, pa cemo koristiti ovde kao PRE  MIDDLEWARE. i ovaj deo sa populate sada kada smo napravili pre mw u tourModel.js mozemo da obrisemo.
+
+	/* 
+	? BEZ POPULATE:
+		guides: [
+			ObjectId('64d69f62d4148c8dbfd1fa18')
+			ObjectId('64d69fc8859577ccb505ce49')
+		]
+
+	? SA POPULATE (izgleda kao da smo radili embedding):
+		"guides": [
+			{
+				"_id": "64d69f62d4148c8dbfd1fa18",
+				"name": "Guidee",
+				"email": "guide@test.io",
+				"role": "guide",
+				"__v": 0
+			},
+			{
+				"_id": "64d69fc8859577ccb505ce49",
+				"name": "Guidee 2",
+				"email": "guide_2@test.io",
+				"role": "guide",
+				"__v": 0
+			}
+		],
+	*/
 
 	if (!tour) return next(new AppError('No tour found with that ID', 404))
 
