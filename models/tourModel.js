@@ -1,7 +1,7 @@
 const mongoose = require('mongoose')
 const slugify = require('slugify')
 // const validator = require('validator')
-const User = require('./userModel')
+// const User = require('./userModel') // za embedding guide nam je bil opoterbno
 
 const tourSchema = new mongoose.Schema(
 	{
@@ -123,14 +123,17 @@ const tourSchema = new mongoose.Schema(
 
 		//? IMPLEMENTING #EMBEDDING Tour Guides documents into a Tour document
 		//! Medjutim, u ovom slucaju nije pametno vrsiti ovo tehnikom embedding jer ako korisnik promeni nesto od podataka, recimo ako apdejtuje email ili role iz guide u lead-guide, svaki x kada bi se ova promena izvrsila onda bi morao da cekiras da li taj Tour ima guide korisnika, i ako ima, onda apdejtuj taj Tour takodje. A to je mnogo posla, i necemo to raditi. Ali je Jonas hteo da pokaze kako embedding radi.
-		guides: Array,
+		// guides: Array,
 
-		//! A sad ce Tours i Users imati razlicite entitete u db. Dakle sve sto ce biti sacuvano u Tour documentu jesu IDs korisnika koji su Tour Guide za taj neki specifican Tour - WTF.
-		//! Potom, kada query-ujemo Tour, zelimo da automatski imamo pristup Tour Guides-u, ali ponovo, bez da ono bude sacuvano u samomom Tour dokumentu, a upravo to se zove REFERENCING!!
 		//? IMPLEMENTING REFERENCING
-		// guides: [
-		// 	{ type: mongoose.Schema.ObjectId, ref: 'User' }, // ocekujemo da tip svakog elementa u guides arraya biti MongoDB ID
-		// ],
+		//! A sad ce Tours i Users imati kompletno razdvojene entitete u db. Dakle sve sto ce biti sacuvano u Tour documentu jesu IDs korisnika koji su Tour Guide-eri za taj neki specifican Tour
+		//! Potom, kada query-ujemo Tour, zelimo da automatski imamo pristup Tour Guides-u, ali ponovo, bez da ono bude sacuvano u samomom Tour dokumentu, a upravo to se zove REFERENCING!!
+		guides: [
+			{
+				type: mongoose.Schema.ObjectId, // ocekujemo da tip svakog elementa u guides arraya biti MongoDB ID
+				ref: 'User', // i za ovo nam nije potrebno da importujemo USer
+			},
+		],
 	},
 
 	//? SCHEMA OPTIONS
@@ -170,33 +173,33 @@ tourSchema.pre('save', function (next) {
 })
 
 //? IMPLEMENTING #EMBEDDING - responsive for perform the EMBEDDIGN
-tourSchema.pre('save', async function (next) {
-	const guidesPromises = this.guides.map(
-		async (id) => await User.findById(id)
-	)
-	this.guides = await Promise.all(guidesPromises)
-	next()
+// tourSchema.pre('save', async function (next) {
+// 	const guidesPromises = this.guides.map(
+// 		async (id) => await User.findById(id)
+// 	)
+// 	this.guides = await Promise.all(guidesPromises)
+// 	next()
 
-	/* 		
-```		...
-```		"guides": [
-```			{
-```				"_id": "64d69f62d4148c8dbfd1fa18",
-```				"name": "Guidee",
-```				"email": "guide@test.io",
-```				"role": "guide",
-```				"__v": 0
-```			},
-```			{
-```				"_id": "64d69fc8859577ccb505ce49",
-```				"name": "Guidee 2",
-```				"email": "guide_2@test.io",
-```				"role": "guide",
-```				"__v": 0
-```			}
-```		],
-```	  	...*/
-})
+// 	/*
+// ```		...
+// ```		"guides": [
+// ```			{
+// ```				"_id": "64d69f62d4148c8dbfd1fa18",
+// ```				"name": "Guidee",
+// ```				"email": "guide@test.io",
+// ```				"role": "guide",
+// ```				"__v": 0
+// ```			},
+// ```			{
+// ```				"_id": "64d69fc8859577ccb505ce49",
+// ```				"name": "Guidee 2",
+// ```				"email": "guide_2@test.io",
+// ```				"role": "guide",
+// ```				"__v": 0
+// ```			}
+// ```		],
+// ```	  	...*/
+// })
 
 /* // neko zove mw neko zove HOOK
 tourSchema.pre('save', function (next) {
